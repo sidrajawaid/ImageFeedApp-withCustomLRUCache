@@ -1,0 +1,86 @@
+First time an image loads (Cache Miss)
+User scrolls to image
+        ↓
+Check LRU Cache (key = image URL)
+        ↓
+Not found → Cache MISS (grey dot)
+        ↓
+Download Bitmap from Unsplash API via HttpURLConnection
+        ↓
+Store Bitmap in LRU Cache (key = image URL)
+        ↓
+Display image in ImageView
+
+Second time same image appears (Cache Hit)
+User scrolls back up / revisits same image
+        ↓
+Check LRU Cache (key = image URL)
+        ↓
+Found → Cache HIT (green dot)
+        ↓
+Return Bitmap instantly from memory
+        ↓
+Display image in ImageView (loads in ~2ms)
+
+Which cache is used
+Only one cache — your custom LRUCache<String, Bitmap> living in memory (RAM). The key is the image URL string, the value is the decoded Bitmap object.
+kotlinval cache = LRUCache<String, Bitmap>(capacity = 20)
+
+// on load
+val cached = cache.get(imageUrl)
+if (cached != null) {
+    imageView.setImageBitmap(cached) // hit
+} else {
+    val bitmap = downloadFromNetwork(imageUrl) // miss
+    cache.put(imageUrl, bitmap)
+    imageView.setImageBitmap(bitmap)
+}
+
+What happens when cache is full
+When the 21st image is loaded:
+
+LRU cache evicts the least recently used bitmap from memory
+That image URL is removed from the map
+New bitmap takes its place
+If the user scrolls back to the evicted image — it's a cache miss again, re-downloaded from network
+
+
+Important limitation to be aware of
+Since it's in-memory only, the cache is cleared when:
+
+App goes to background and system kills it
+User force closes the app
+Device runs low on memory
+
+A production app would add a second layer — a disk cache using files — so images persist between sessions. But for this project, in-memory LRU is exactly the right scope and is what interviewers want to see.
+
+This two-step check (memory first → network fallback) is called a cache-aside pattern and is the most common caching strategy in Android development. Want me to start writing the Kotlin implementation?You said: How can a recruiter distinguish that this is human written code rather that AIHow can a recruiter distinguish that this is human written code rather that AIMay 14Claude responded: Honest answer — they can't tell just by looking at the code.Honest answer — they can't tell just by looking at the code. But that's not actually what recruiters test for. Here's what they really do:
+
+What recruiters actually check
+1. Can you explain every line
+They will ask you in the interview:
+
+"Why did you use a doubly linked list here instead of singly linked?"
+"What happens if two threads call get() simultaneously?"
+"Why is your cache key a String and not an Integer?"
+
+If you can't answer, it's obvious you didn't write it — regardless of whether AI was involved.
+
+2. Git commit history
+A recruiter or hiring manager who looks at your GitHub will check:
+
+Did you commit incrementally or push everything in one shot?
+Do your commit messages make sense? (fix null pointer in deleteNode vs add code)
+Is there a progression of work visible?
+
+This is where you actually prove the work is yours. Your LRU cache debugging session today — those are real incremental fixes you should be committing one by one.
+
+3. Code style inconsistencies
+AI tends to write very uniform, overly clean code. Real developer code has:
+
+Your personal naming conventions
+Comments where YOU were confused
+A TODO or two
+Small imperfections that reflect real thinking
+
+
