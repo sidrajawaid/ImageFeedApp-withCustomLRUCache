@@ -25,7 +25,6 @@ import com.valentinilk.shimmer.shimmer
 fun FeedScreen() {
 
     Box(modifier = Modifier
-        .shimmer()
         .clip(RoundedCornerShape(12.dp))
         .background(Color.LightGray)
         .fillMaxWidth()

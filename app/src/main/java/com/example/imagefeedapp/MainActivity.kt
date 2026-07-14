@@ -11,7 +11,9 @@ import androidx.compose.ui.res.stringResource
 import com.example.imagefeedapp.ui.screens.DashboardScreen
 import com.example.imagefeedapp.ui.screens.ToolBarItem
 import com.example.imagefeedapp.ui.theme.ImageFeedAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
