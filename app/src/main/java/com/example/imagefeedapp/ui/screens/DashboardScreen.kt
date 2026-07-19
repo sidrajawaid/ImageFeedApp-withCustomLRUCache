@@ -12,13 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+//import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.imagefeedapp.ui.items.FooterFetchingItem
 import com.example.imagefeedapp.viewmodel.DashboardViewModel
 
 
 @Composable
-fun DashboardScreen(innerPadding: PaddingValues, dashboardViewModel: DashboardViewModel = hiltViewModel()) {
+fun DashboardScreen(innerPadding: PaddingValues) {
 
     Box(modifier = Modifier.padding(innerPadding).wrapContentHeight().wrapContentWidth()) {
         Column() {
