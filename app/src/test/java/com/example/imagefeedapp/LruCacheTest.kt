@@ -2,18 +2,14 @@ package com.example.imagefeedapp
 
 import android.graphics.Bitmap
 import com.example.imagefeedapp.data.cache.LRUCache
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import kotlin.jvm.java
 import org.mockito.kotlin.whenever
 import org.mockito.Mockito.mock
-import org.mockito.internal.matchers.Null
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.text.DecimalFormat
-import kotlin.math.roundToLong
 
 
 class LRUCacheTest {
@@ -124,6 +120,116 @@ class LRUCacheTest {
         assertNull(cache!!.getBitmap("url/3"))
         assertEquals(0, cache!!.getCacheStats().currentCacheSize)
     }
+
+    //size tracking
+
+    @Test
+    fun `currentSize increases by bitmap byteCount after put`() {
+        cache!!.addUrlEntry("url/1", bitmap = mockBitmap1)
+        val stats = cache!!.getCacheStats()
+        assertEquals(1000, stats.currentCacheSize)
+    }
+
+    @Test
+    fun `currentSize decreases by bitmap byteCount after eviction`() {
+        cache!!.addUrlEntry("url/1", bitmap = mockBitmap1)
+        cache!!.addUrlEntry("url/2", bitmap = mockBitmap2)
+        cache!!.addUrlEntry("url/3", bitmap = mockBitmap3)
+        //cache size = 3000
+        mockBitmap4 = mock(Bitmap::class.java)
+        whenever(mockBitmap4.byteCount).thenReturn(100)
+        cache!!.addUrlEntry("url/4", mockBitmap4)
+        val stats = cache!!.getCacheStats()
+        assertEquals(2100, stats.currentCacheSize)
+    }
+
+    @Test
+    fun testForCurrentSizeZeroOnFreshCache() {
+
+        val stats = cache!!.getCacheStats()
+        assertEquals(0, stats.currentCacheSize)
+
+    }
+
+    @Test
+    fun testShowsBitmapLargerThanMaxSizeIsNotInserted() {
+        val mockBitmap4 = mock(Bitmap::class.java)
+        whenever(mockBitmap4.byteCount).thenReturn(5000)
+        cache!!.addUrlEntry("url/1", mockBitmap4)
+        assertNull(cache!!.getBitmap("url/1"))
+    }
+
+    @Test
+    fun testShowsBitmapExactlyEqualToMaxSizeIsInsertedSuccessfully() {
+        val mockBitmap4 = mock(Bitmap::class.java)
+        whenever(mockBitmap4.byteCount).thenReturn(3000)
+        cache!!.addUrlEntry("url/4", mockBitmap4)
+        assertEquals(3000, cache!!.getBitmap("url/4")!!.byteCount)
+    }
+
+    @Test
+    fun testShowsCurrentSizeNeverExceedsMaxSizeAfterMultipleAdditions() {
+// fill cache completely
+        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000
+        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
+        cache!!.addUrlEntry("url/3", mockBitmap3)  // 1500
+        // currentSize = 3000 = maxSize
+
+        // keep inserting — evictions should keep currentSize within bounds
+        val extraBitmap1 = mock(Bitmap::class.java)
+        val extraBitmap2 = mock(Bitmap::class.java)
+        val extraBitmap3 = mock(Bitmap::class.java)
+        whenever(extraBitmap1.byteCount).thenReturn(800)
+        whenever(extraBitmap2.byteCount).thenReturn(1200)
+        whenever(extraBitmap3.byteCount).thenReturn(600)
+
+        cache!!.addUrlEntry("url/4", extraBitmap1)
+        cache!!.addUrlEntry("url/5", extraBitmap2)
+        cache!!.addUrlEntry("url/6", extraBitmap3)
+
+        val stats = cache!!.getCacheStats()
+        assertTrue(stats.currentCacheSize <= stats.maxSize)
+    }
+
+    @Test
+    fun testPerformsRecentlyAccessedEntrySurvivesEvictionOverUnaccessedEntry() {
+        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000 - inserted first
+        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
+        cache!!.addUrlEntry("url/3", mockBitmap3)  // 1500
+        // cache full at 3000
+
+        cache!!.getBitmap("url/1")  // access url/1 — promotes it to MRU
+
+        // insert new entry — forces eviction
+        // url/2 should be evicted (LRU), not url/1 (recently accessed)
+        val newBitmap = mock(Bitmap::class.java)
+        whenever(newBitmap.byteCount).thenReturn(500)
+        cache!!.addUrlEntry("url/4", newBitmap)
+
+        assertNull(cache!!.getBitmap("url/2"))       // evicted — was LRU
+        assertNotNull(cache!!.getBitmap("url/1"))     // survived — was accessed
+        assertNotNull(cache!!.getBitmap("url/3"))     // survived — inserted after url/2
+        assertNotNull(cache!!.getBitmap("url/4"))     // just inserted
+    }
+
+    @Test
+    fun testReturnsCorrectHitRate() {
+        // specific byteCount needed only here — declare inside
+        val smallBitmap = mock(Bitmap::class.java)
+        whenever(smallBitmap.byteCount).thenReturn(100)
+
+        cache!!.addUrlEntry("url/small", smallBitmap)
+        cache!!.getBitmap("url/small")   // hit
+        cache!!.getBitmap("url/small")   // hit
+        cache!!.getBitmap("url/missing") // miss
+
+        val stats = cache!!.getCacheStats()
+        val temp = BigDecimal(stats.hitRate.toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
+
+        assertEquals(0.67f, temp)
+    }
+
+    //
 
 
 }
