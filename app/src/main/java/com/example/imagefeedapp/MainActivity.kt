@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.example.imagefeedapp.ui.screens.DashboardScreen
+import com.example.imagefeedapp.ui.feed.DashboardScreen
 import com.example.imagefeedapp.ui.screens.ToolBarItem
 import com.example.imagefeedapp.ui.theme.ImageFeedAppTheme
 

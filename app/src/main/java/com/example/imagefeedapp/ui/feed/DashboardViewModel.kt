@@ -1,12 +1,10 @@
-package com.example.imagefeedapp.viewmodel
-
+package com.example.imagefeedapp.ui.feed
 
 import androidx.lifecycle.ViewModel
 import com.example.imagefeedapp.model.LoadingStates
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
 
 class DashboardViewModel: ViewModel() {
 
