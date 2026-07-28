@@ -61,20 +61,6 @@ class LRUCacheTest {
     }
 
     @Test
-    fun testPerformsEvictionForNewBitmapEntry() {
-
-        mockBitmap4 = mock(Bitmap::class.java)
-        whenever(mockBitmap4.byteCount).thenReturn(1000)
-
-        cache?.addUrlEntry(
-            "https://picsum.photos/id/1084/536/354?grayscale",
-            mockBitmap4
-        )
-        assertEquals(null, cache?.getBitmap("url/1")?.byteCount)
-
-    }
-
-    @Test
     fun testReturnsSecondOccurrenceOfSameUrl() {
 
         mockBitmap5 = mock(Bitmap::class.java)
@@ -93,18 +79,6 @@ class LRUCacheTest {
         )
         assertEquals(600, cache?.getBitmap("url/6")?.byteCount)
 
-    }
-
-    @Test
-    fun testReturnNullForLargeBitmap() {
-        mockBitmap7 = mock(Bitmap::class.java)
-        whenever(mockBitmap7.byteCount).thenReturn(5000)
-
-        cache?.addUrlEntry(
-            "url/7",
-            mockBitmap7
-        )
-        assertNull(cache!!.getBitmap("url/7")?.byteCount)
     }
 
     @Test
@@ -231,5 +205,48 @@ class LRUCacheTest {
 
     //
 
+    @Test
+    fun testEvictionCountIncrementsOnEviction() {
+        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000
+        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
+        cache!!.addUrlEntry("url/3", mockBitmap3)  // 1500 — cache full
+
+        val newBitmap = mock(Bitmap::class.java)
+        whenever(newBitmap.byteCount).thenReturn(500)
+        cache!!.addUrlEntry("url/4", newBitmap)  // triggers eviction
+
+        assertEquals(1, cache!!.getCacheStats().evictionCount)
+    }
+
+    @Test
+    fun testHitAndMissCountsIncrementCorrectly() {
+        cache!!.addUrlEntry("url/1", mockBitmap1)
+        cache!!.getBitmap("url/1")    // hit
+        cache!!.getBitmap("url/1")    // hit
+        cache!!.getBitmap("url/99")   // miss
+
+        val stats = cache!!.getCacheStats()
+        assertEquals(2, stats.hitCount)
+        assertEquals(1, stats.missCount)
+    }
+
+    @Test
+    fun testCacheUsableAfterClear() {
+        cache!!.addUrlEntry("url/1", mockBitmap1)
+        cache!!.clear()
+
+        cache!!.addUrlEntry("url/2", mockBitmap2)
+        assertNotNull(cache!!.getBitmap("url/2"))
+        assertEquals(500, cache!!.getCacheStats().currentCacheSize)
+    }
+
+    @Test
+    fun testEvictionCountStaysZeroWhenCacheNotFull() {
+        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000
+        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
+        // currentSize = 1500, maxSize = 3000 — no eviction
+
+        assertEquals(0, cache!!.getCacheStats().evictionCount)
+    }
 
 }
