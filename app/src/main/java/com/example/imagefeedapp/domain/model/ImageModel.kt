@@ -1,11 +1,12 @@
 package com.example.imagefeedapp.domain.model
 
 data class ImageModel(
-    val id:Int,
-    val url:Int,
+    val id:String,
+    val url:String,
     val width:Int,
     val height:Int,
-    val itsAhit:Boolean
+    val downloadUrl:String,
+  //  val isHit:Boolean
 
 
 )
