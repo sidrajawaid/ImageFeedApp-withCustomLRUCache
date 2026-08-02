@@ -4,6 +4,8 @@ import android.content.Context
 import com.example.imagefeedapp.data.cache.LRUCache
 import com.example.imagefeedapp.data.remote.PicsumApiService
 import com.example.imagefeedapp.data.network.NetworkMonitor
+import com.example.imagefeedapp.data.repository.ImageRepositoryImpl
+import com.example.imagefeedapp.domain.repository.ImageRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,4 +63,10 @@ object AppModule {
     fun providePicsumApiService(retrofit: Retrofit): PicsumApiService {
         return retrofit.create(PicsumApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideImageRepository(impl: ImageRepositoryImpl): ImageRepository {
+        return impl
+        }
 }
