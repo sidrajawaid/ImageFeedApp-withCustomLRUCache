@@ -2,6 +2,7 @@ package com.example.imagefeedapp.di
 
 import android.content.Context
 import com.example.imagefeedapp.data.cache.LRUCache
+import com.example.imagefeedapp.data.loader.BitmapLoader
 import com.example.imagefeedapp.data.remote.PicsumApiService
 import com.example.imagefeedapp.data.network.NetworkMonitor
 import com.example.imagefeedapp.data.repository.ImageRepositoryImpl
@@ -69,4 +70,5 @@ object AppModule {
     fun provideImageRepository(impl: ImageRepositoryImpl): ImageRepository {
         return impl
         }
+
 }
