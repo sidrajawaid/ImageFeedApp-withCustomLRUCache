@@ -84,7 +84,7 @@ android {
 
 //hilt
         implementation("com.google.dagger:hilt-android:2.51.1")
-        // kapt("com.google.dagger:hilt-compiler:2.51.1")
+         ksp("com.google.dagger:hilt-compiler:2.51.1")
         ksp("com.google.dagger:hilt-compiler:2.51.1")
 
 
@@ -94,7 +94,7 @@ android {
         // implementation("androidx.activity:activity-compose:1.8.2")
         implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
         debugImplementation("androidx.compose.ui:ui-tooling")
-        //  implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+        implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
         implementation("androidx.navigation:navigation-compose:2.8.0")
 
         implementation("com.squareup.retrofit2:retrofit:2.11.0")
