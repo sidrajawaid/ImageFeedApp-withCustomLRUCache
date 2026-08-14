@@ -24,7 +24,6 @@ class DashboardViewModel @Inject constructor(
 
 
     private val _isConnected = MutableStateFlow(false)
-    val isConnected: StateFlow<Boolean> = _isConnected.asStateFlow()
 
     private val _bitmapState = MutableStateFlow<Map<String, Bitmap?>>(emptyMap())
     val bitmapState: StateFlow<Map<String, Bitmap?>> = _bitmapState.asStateFlow()
@@ -41,7 +40,7 @@ class DashboardViewModel @Inject constructor(
 
     }
 
-    private fun loadImages() {
+     fun loadImages() {
         viewModelScope.launch {
             getImagesUseCase.invoke().collect { result ->
                 _uiState.value = result
@@ -52,7 +51,7 @@ class DashboardViewModel @Inject constructor(
     fun loadBitmap(url: String) {
         viewModelScope.launch {
             val bitmap = bitmapLoader.loadBitmap(url)
-            _bitmapState.value = _bitmapState.value + (url to bitmap)
+            _bitmapState.value += (url to bitmap)
         }
     }
 }

@@ -6,6 +6,6 @@ sealed class FeedUiState {
     object Loading : FeedUiState()
     data class Success(val imageModel: List<ImageModel>) : FeedUiState()
     data class Failure(val message: String) : FeedUiState()
-    object NoNetwork: FeedUiState()
+    object NoConnection: FeedUiState()
     object Empty: FeedUiState()
 }

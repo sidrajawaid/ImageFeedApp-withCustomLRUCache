@@ -21,7 +21,7 @@ class ImageRepositoryImpl @Inject constructor(
         val isConnected = networkMonitor.isConnected.first()
 
         if (!isConnected) {
-            emit(FeedUiState.NoNetwork)
+            emit(FeedUiState.NoConnection)
             return@flow  // stop here, no point continuing
         }
         emit(FeedUiState.Loading)
