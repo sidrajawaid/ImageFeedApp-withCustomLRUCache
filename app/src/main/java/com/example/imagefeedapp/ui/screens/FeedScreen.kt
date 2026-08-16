@@ -17,35 +17,34 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.ImageModel
 
 
 @Composable
-fun FeedScreen(images:List<ImageModel>, bitmapState: Map<String, Bitmap?>,
+fun FeedScreen(images:List<ImageModel>, bitmapState: Map<String, BitmapResult?>,
                onImageVisible: (String) -> Unit) {
 
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(Color.LightGray)
             .fillMaxSize()
     ) {
-        val itemsList = images
+
         LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Adaptive(120.dp), // 2 columns
+            columns = StaggeredGridCells.Fixed(2), // 2 columns
             modifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalItemSpacing = 8.dp
         ) {
-            items(itemsList) { item ->
-                /*CardItem(
+            items(images) { item ->
+                CardItem(
                     imageModel = item,
-                    bitmap = bitmapState[item.downloadUrl],
+                    bitmapImg = bitmapState[item.downloadUrl],
                     onVisible = {
                         onImageVisible(item.downloadUrl)
-                    })*/
+                    })
             }
         }
     }
@@ -62,9 +61,9 @@ fun FeedScreenPreview() {
 
     val sampleBitmapState = remember {
         mapOf(
-            sampleImages[0].url to createSampleBitmap(),
-            sampleImages[1].url to null, // simulates a cache miss
-            sampleImages[2].url to createSampleBitmap()
+            sampleImages[0].downloadUrl to BitmapResult(createSampleBitmap() ,false),
+            sampleImages[1].downloadUrl to BitmapResult(null, true), // simulates a cache miss
+            sampleImages[2].downloadUrl to BitmapResult(createSampleBitmap(), true)
         )
     }
 

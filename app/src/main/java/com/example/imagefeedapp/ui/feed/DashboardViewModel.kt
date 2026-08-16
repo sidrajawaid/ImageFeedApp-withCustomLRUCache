@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imagefeedapp.data.loader.BitmapLoader
 import com.example.imagefeedapp.data.network.NetworkMonitor
+import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.FeedUiState
 import com.example.imagefeedapp.domain.usecase.GetImagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +26,8 @@ class DashboardViewModel @Inject constructor(
 
     private val _isConnected = MutableStateFlow(false)
 
-    private val _bitmapState = MutableStateFlow<Map<String, Bitmap?>>(emptyMap())
-    val bitmapState: StateFlow<Map<String, Bitmap?>> = _bitmapState.asStateFlow()
+    private val _bitmapState = MutableStateFlow<Map<String, BitmapResult?>>(emptyMap())
+    val bitmapState: StateFlow<Map<String, BitmapResult?>> = _bitmapState.asStateFlow()
     private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
     val uiState: StateFlow<FeedUiState> = _uiState.asStateFlow()
 

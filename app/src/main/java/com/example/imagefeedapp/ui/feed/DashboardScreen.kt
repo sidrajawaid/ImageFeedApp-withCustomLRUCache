@@ -13,6 +13,7 @@ import com.example.imagefeedapp.domain.model.FeedUiState
 import com.example.imagefeedapp.ui.items.FooterFetchingItem
 import com.example.imagefeedapp.ui.screens.EmptyFeedScreen
 import com.example.imagefeedapp.ui.screens.FailureFeedScreen
+import com.example.imagefeedapp.ui.screens.FeedScreen
 import com.example.imagefeedapp.ui.screens.NoConnectionScreen
 
 
@@ -28,18 +29,24 @@ import com.example.imagefeedapp.ui.screens.NoConnectionScreen
         Box(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
-        ) {
 
+                .fillMaxSize()){
                 when (uiState) {
                     is FeedUiState.Loading -> {
                         FooterFetchingItem()
-                    }// show loading composable
-                    is FeedUiState.Success -> { }// show feed grid, pass images and bitmapState
+                    }
+                    is FeedUiState.Success -> {
+                        val images = (uiState as FeedUiState.Success).imageModel
+                        FeedScreen(
+                            images = images,
+                            bitmapState = bitmapState,
+                            onImageVisible = { url -> viewModel.loadBitmap(url) }
+                        )
+                    }
                     is FeedUiState.Failure -> {
                         FailureFeedScreen(onRetry = {viewModel.loadImages()})
                     }// show empty feed screen
-                    is FeedUiState.Empty -> {EmptyFeedScreen()}// show empty feed screen
+                    is FeedUiState.Empty -> {EmptyFeedScreen()}
                     is FeedUiState.NoConnection -> {
                         NoConnectionScreen()
                     }// show no connection screen
