@@ -50,6 +50,8 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun loadBitmap(url: String) {
+        val existing = _bitmapState.value[url]
+        if (existing?.isFromCache == true) return
         viewModelScope.launch {
             val bitmap = bitmapLoader.loadBitmap(url)
             _bitmapState.value += (url to bitmap)

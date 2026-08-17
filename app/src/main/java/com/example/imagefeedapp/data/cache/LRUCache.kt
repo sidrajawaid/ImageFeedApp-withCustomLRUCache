@@ -1,6 +1,7 @@
 package com.example.imagefeedapp.data.cache
 
 import android.graphics.Bitmap
+import android.util.Log
 import com.example.imagefeedapp.domain.model.CacheStats
 
 
@@ -34,9 +35,10 @@ class LRUCache(val cacheSize:Int) {
         }
         return bitmap
     }
-
+    @Synchronized
     fun deleteUrlEntry() {
-        val firstEntry = map.iterator().next()
+        val firstEntry = map.entries.iterator().next()
+        Log.d("LRUCache", "Evicting: ${firstEntry.key}")
         map.remove(firstEntry.key)
         currentSize -= firstEntry.value.byteCount
         deletedUrls++
