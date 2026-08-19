@@ -22,7 +22,7 @@ import com.example.imagefeedapp.R
 
 
 @Composable
-fun GridView() {
+fun GridView(textColor:Color,textValue:String,textKey:String) {
     Box(contentAlignment = Alignment.Center, modifier = Modifier.
     background(Color(0xFFAAAAAA), shape = RoundedCornerShape(4.dp))
         .padding(16.dp).wrapContentSize()) {
@@ -30,9 +30,9 @@ fun GridView() {
             verticalArrangement = Arrangement.spacedBy(6.dp), // Space between items
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Hit rate")
+            Text(text = textKey)
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = "87%")
+            Text(text = textValue, color = textColor)
         }
     }
 }
@@ -40,5 +40,5 @@ fun GridView() {
 @Preview
 @Composable
 fun PreviewGridView(){
-    GridView()
+    GridView(Color.Green,"Hit Rate","87%")
 }

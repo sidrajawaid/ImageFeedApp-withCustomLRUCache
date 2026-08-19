@@ -41,7 +41,7 @@ fun ProgressView(setColor:Color, setProgress:Float,
         }
 
         LinearProgressIndicator(
-            trackColor = Color(0xFF4081FF), progress = setProgress,
+            trackColor = Color(0xFF64FFDA), progress = setProgress,
             modifier = Modifier.fillMaxWidth(),
             color = Color(LocalContext.current.resources.getColor(R.color.grey))
         )
