@@ -1,5 +1,6 @@
 package com.example.imagefeedapp.ui.stats
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,13 +8,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.imagefeedapp.domain.model.CacheStats
@@ -29,34 +36,58 @@ fun CacheStatsScreen(
     onBack: () -> Unit
 ) {
 
-Column(verticalArrangement = Arrangement.SpaceBetween,
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier.fillMaxSize()){}
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically) {
-        Column() {
-            GridView(Color(0xFF954646FF), "Hit Rate", cacheStats.hitRate.toString())
-            GridView(Color(0xFF5B7837FF), "Misses", cacheStats.missCount.toString())
+    val usedMB = cacheStats.currentCacheSize / (1024f * 1024f)
+    val maxMB = cacheStats.maxSize / (1024f * 1024f)
+
+    val memoryUsagePercent = if (cacheStats.maxSize == 0) 0f
+    else cacheStats.currentCacheSize.toFloat() / cacheStats.maxSize
+
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier.fillMaxWidth().background(Color(0xFFFFFFFF))
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            GridView(Color(0xFF954646FF), "Hit Rate", "${cacheStats.hitRate}%")
+            GridView(Color(0xFF5B7837FF), "Cache size", "${cacheStats.currentCacheSize} MB")
         }
-        Column() {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.wrapContentSize()
+        ) {
             GridView(Color(0xFF5B7837FF), "Hits", cacheStats.hitCount.toString())
-            GridView(Color(0xFF5B7837FF), "Cache size", cacheStats.currentCacheSize.toString())
+            GridView(Color(0xFF5B7837FF), "Misses", cacheStats.missCount.toString())
+
 
         }
-    }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.wrapContentHeight()) {
-        Text(text = "Memory Usage", modifier = Modifier.fillMaxWidth())
-        ProgressView(Color.Red, 40f, "", "")
-        ProgressView(Color.Red, 40f, "", "")
-        Text("Recent Eviction")
-        RecentEvictionsItem("Photo#4", "312KB - 3s ago")
-        RecentEvictionsItem("Photo#4", "312KB - 3s ago")
-        RecentEvictionsItem("Photo#4", "312KB - 3s ago")
-    }
 
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .wrapContentHeight()
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+        )
+        {
+            Text(text = "MEMORY USAGE", modifier = Modifier.fillMaxWidth(), fontStyle = FontStyle.Italic)
+            ProgressView(Color.Blue, 40f, "Used", memoryUsagePercent.toString())
+            ProgressView(Color.Green, 40f, "Hit rate", "${cacheStats.hitRate}%")
+            Text("RECENT EVICTIONS", modifier = Modifier.padding(top=8.dp), fontStyle = FontStyle.Italic)
 
+            /*LazyColumn()
+            {
+                items(cacheStats.recentEvictions) {
+                    item->
+                RecentEvictionsItem(item, "312KB - 3s ago")
+            }*/
+            }
+        }
+
+    }
 }
 
 

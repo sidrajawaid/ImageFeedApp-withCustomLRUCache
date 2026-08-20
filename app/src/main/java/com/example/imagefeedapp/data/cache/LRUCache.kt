@@ -3,6 +3,7 @@ package com.example.imagefeedapp.data.cache
 import android.graphics.Bitmap
 import android.util.Log
 import com.example.imagefeedapp.domain.model.CacheStats
+import com.example.imagefeedapp.domain.model.EvictionRecord
 
 
 class LRUCache(val cacheSize:Int) {
@@ -12,6 +13,8 @@ class LRUCache(val cacheSize:Int) {
     private var hitUrls = 0
     private var missUrls = 0;
     private var deletedUrls = 0
+
+    private val evictionHistory = ArrayDeque<EvictionRecord>(10)
     @Synchronized
     fun addUrlEntry(url: String, bitmap: Bitmap) {
 
@@ -42,6 +45,13 @@ class LRUCache(val cacheSize:Int) {
         map.remove(firstEntry.key)
         currentSize -= firstEntry.value.byteCount
         deletedUrls++
+        if (evictionHistory.size >= 10) evictionHistory.removeFirst()
+        evictionHistory.addLast(
+            EvictionRecord(
+                url = firstEntry.key,
+                sizeBytes = firstEntry.value.byteCount
+            )
+        )
     }
 
     @Synchronized
@@ -62,7 +72,8 @@ class LRUCache(val cacheSize:Int) {
             hitCount = hitUrls,
             missCount = missUrls,
             evictionCount = deletedUrls,
-            hitRate = hitRate
+            hitRate = hitRate,
+            recentEvictions=evictionHistory
         )
 
     }

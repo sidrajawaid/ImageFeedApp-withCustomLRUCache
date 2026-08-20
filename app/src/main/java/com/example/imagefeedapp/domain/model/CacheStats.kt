@@ -6,5 +6,6 @@ data class CacheStats (
     val hitCount: Int,
     val missCount: Int,
     val evictionCount: Int,
-    val hitRate: Float
+    val hitRate: Float,
+    val recentEvictions: List<EvictionRecord> = emptyList()
 )
