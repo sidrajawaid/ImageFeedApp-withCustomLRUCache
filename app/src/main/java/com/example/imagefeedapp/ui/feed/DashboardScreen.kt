@@ -15,6 +15,7 @@ import com.example.imagefeedapp.ui.screens.EmptyFeedScreen
 import com.example.imagefeedapp.ui.screens.FailureFeedScreen
 import com.example.imagefeedapp.ui.screens.FeedScreen
 import com.example.imagefeedapp.ui.screens.NoConnectionScreen
+import com.example.imagefeedapp.ui.stats.CacheStatsRoute
 
 
 @Composable
@@ -42,6 +43,7 @@ import com.example.imagefeedapp.ui.screens.NoConnectionScreen
                             bitmapState = bitmapState,
                             onImageVisible = { url -> viewModel.loadBitmap(url) }
                         )
+
                     }
                     is FeedUiState.Failure -> {
                         FailureFeedScreen(onRetry = {viewModel.loadImages()})
