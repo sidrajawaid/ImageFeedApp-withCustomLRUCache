@@ -76,7 +76,8 @@ fun AppBar(){
 fun PreviewToolBarItem(){
 
 
-  //  ToolBarItem("Image Feed",onStatsClick() )
+    ToolBarItem("Image Feed", onStatsClick = {
+        println("Button clicked in preview") })
 }
 
 

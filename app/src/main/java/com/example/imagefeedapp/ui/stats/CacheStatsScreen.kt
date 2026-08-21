@@ -11,6 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,8 +24,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.imagefeedapp.domain.model.CacheStats
 import com.example.imagefeedapp.ui.items.RecentEvictionsItem
 import com.example.imagefeedapp.ui.screens.GridView
@@ -43,20 +51,32 @@ fun CacheStatsScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
         modifier = Modifier.fillMaxWidth()
-            .background(Color(0xFFFFFFFF))
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            GridView(modifier = Modifier.weight(1f),Color(0xFF954646FF), "Hit Rate", "%.0f%%\".format(cacheStats.hitRate * 100)")
-            GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Cache size", "%.1f MB".format(usedMB))
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+            Text(
+                text = "Cache Stats",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
         }
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
+        ) {
+
+            GridView(modifier = Modifier.weight(1f),Color(0xFF954646FF), "Hit Rate", "%.0f%%".format(cacheStats.hitRate * 100))
+            GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Cache size", "%.1f MB".format(usedMB))
+        }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(top=8.dp)
         ) {
             GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Hits", cacheStats.hitCount.toString())
             GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Misses", cacheStats.missCount.toString())
@@ -71,17 +91,31 @@ fun CacheStatsScreen(
                 .wrapContentHeight()
         )
         {
-            Text(text = "MEMORY USAGE", modifier = Modifier.fillMaxWidth(), fontStyle = FontStyle.Italic)
-            ProgressView(Color.Blue, usedMB, "Used", memoryUsagePercent.toString())
-            ProgressView(Color.Green, (cacheStats.hitRate * 100), "Hit rate", "${cacheStats.hitRate}%")
-            Text("RECENT EVICTIONS", modifier = Modifier.padding(top=8.dp), fontStyle = FontStyle.Italic)
+            Text(text = "MEMORY USAGE",
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top=8.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp)
+            ProgressView(Color.Blue,
+                usedMB, "Used",
+                "%.1f / %.1f MB".format(usedMB, maxMB))
+
+            ProgressView(Color.Green,
+                (cacheStats.hitRate * 100),
+                "Hit rate",
+                "%.0f%%".format(cacheStats.hitRate))
+
+            Text("RECENT EVICTIONS",
+                modifier = Modifier.padding(top=8.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp)
 
             LazyColumn(modifier = Modifier.height(150.dp))
             {
                 items(cacheStats.recentEvictions){
                     item->
                     RecentEvictionsItem("Photo#${item.url.split("/").getOrNull(5) ?: item.url}",
-                        "${item.sizeBytes / 1024}- ${(System.currentTimeMillis() - item.timestamp) / 1000}")
+                        "${item.sizeBytes / 1024}KB - ${(System.currentTimeMillis() - item.timestamp) / 1000}s ago")
                 }
             }
             }
@@ -104,7 +138,8 @@ fun PreviewCacheStatsScreen() {
             hitCount = 124,
             missCount = 18,
             evictionCount = 3,
-            hitRate = 0.87f
+            hitRate = 0.87f,
+            recentEvictions = emptyList()
         ),
         onClearCache = {},
         onBack = {}
