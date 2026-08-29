@@ -6,7 +6,4 @@ data class ImageModel(
     val width:Int,
     val height:Int,
     val downloadUrl:String,
-  //  val isHit:Boolean
-
-
-)
+ )

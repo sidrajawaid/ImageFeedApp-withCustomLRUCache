@@ -4,5 +4,6 @@ import android.graphics.Bitmap
 
 data class BitmapResult(
     val bitmap: Bitmap?,
-    val isFromCache: Boolean
+    val isFromCache: Boolean,
+    val loadTime: String=""
 )

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.android)
+    //alias(libs.plugins.kotlin.android)
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.ksp)
 }
@@ -12,14 +12,14 @@ kotlin {
 
 android {
     namespace = "com.example.imagefeedapp"
-    compileSdk = 35
+    compileSdk = 37
 
 
     configurations.all {
         resolutionStrategy {
-            force("org.jetbrains.kotlin:kotlin-stdlib:2.0.21")
-            force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.21")
-            force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21")
+            force("org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.get()}")
+            force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libs.versions.kotlin.get()}")
+            force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${libs.versions.kotlin.get()}")
         }
     }
 
@@ -60,6 +60,7 @@ android {
     dependencies {
         implementation(platform(libs.androidx.compose.bom))
         implementation(libs.androidx.activity.compose)
+        implementation(libs.androidx.compose.foundation.layout)
         implementation(libs.androidx.compose.material3)
         implementation(libs.androidx.compose.ui)
         implementation(libs.androidx.compose.ui.graphics)
@@ -77,29 +78,28 @@ android {
         debugImplementation(libs.androidx.compose.ui.test.manifest)
         debugImplementation(libs.androidx.compose.ui.tooling)
         // staggered grid
-        implementation("androidx.compose.foundation:foundation:1.5.0")
+        implementation(libs.androidx.compose.foundation)
 
-        testImplementation("org.mockito:mockito-core:5.4.0")
-        testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+        testImplementation(libs.mockito.core)
+        testImplementation(libs.mockito.kotlin)
 
 //hilt
-        implementation("com.google.dagger:hilt-android:2.51.1")
-         ksp("com.google.dagger:hilt-compiler:2.51.1")
-        ksp("com.google.dagger:hilt-compiler:2.51.1")
+        implementation(libs.hilt.android)
+         ksp(libs.hilt.compiler)
 
 
 //compose
 
-        implementation("androidx.compose.ui:ui")
+        implementation(libs.androidx.ui)
         // implementation("androidx.activity:activity-compose:1.8.2")
-        implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-        debugImplementation("androidx.compose.ui:ui-tooling")
-        implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-        implementation("androidx.navigation:navigation-compose:2.8.0")
+        implementation(libs.androidx.lifecycle.viewmodel.compose)
+        debugImplementation(libs.androidx.ui.tooling)
+        implementation(libs.androidx.hilt.navigation.compose)
+        implementation(libs.androidx.navigation.compose)
 
-        implementation("com.squareup.retrofit2:retrofit:2.11.0")
-        implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-        implementation("com.squareup.okhttp3:okhttp:4.12.0")
-        implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+        implementation(libs.retrofit)
+        implementation(libs.converter.gson)
+        implementation(libs.okhttp)
+        implementation(libs.logging.interceptor)
 
     }

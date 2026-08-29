@@ -98,7 +98,7 @@ fun CacheStatsScreen(
                 fontSize = 16.sp)
             ProgressView(Color.Blue,
                 usedMB, "Used",
-                "%.1f / %.1f MB".format(usedMB, maxMB))
+                /*"%.1f / %.1f MB".format(usedMB, maxMB)*/memoryUsagePercent.toString()+" MB")
 
             ProgressView(Color.Green,
                 (cacheStats.hitRate * 100),

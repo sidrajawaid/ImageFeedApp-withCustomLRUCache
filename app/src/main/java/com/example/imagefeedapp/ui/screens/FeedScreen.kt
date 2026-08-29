@@ -14,37 +14,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.imagefeedapp.domain.model.BitmapResult
+import com.example.imagefeedapp.domain.model.ImageDetailModel
 import com.example.imagefeedapp.domain.model.ImageModel
 
 
 @Composable
-fun FeedScreen(images:List<ImageModel>, bitmapState: Map<String, BitmapResult?>,
-               onImageVisible: (String) -> Unit) {
+fun FeedScreen(
+    images: List<ImageModel>, bitmapState: Map<String, BitmapResult?>,
+    onImageVisible: (String) -> Unit,
+    onImageClick: (ImageDetailModel) -> Unit
+) {
+
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2), // 2 columns
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalItemSpacing = 8.dp
-        ) {
-            items(images) { item ->
-                CardItem(
-                    imageModel = item,
-                    bitmapImg = bitmapState[item.downloadUrl],
-                    onVisible = {
-                        onImageVisible(item.downloadUrl)
-                    })
+                    LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2), // 2 columns
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalItemSpacing = 8.dp
+            ) {
+                items(images) { item ->
+                    CardItem(
+                        imageModel = item,
+                        bitmapImg = bitmapState[item.downloadUrl],
+                        onVisible = { onImageVisible(item.downloadUrl)
+                        },
+                        onClick = {
+                            val result = bitmapState[item.downloadUrl]
+                            if (result?.bitmap != null) {
+                                onImageClick(ImageDetailModel(item, result))
+                            }
+                        })
+                }
             }
         }
     }
-}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -57,16 +67,17 @@ fun FeedScreenPreview() {
 
     val sampleBitmapState = remember {
         mapOf(
-            sampleImages[0].downloadUrl to BitmapResult(createSampleBitmap() ,false),
-            sampleImages[1].downloadUrl to BitmapResult(null, true), // simulates a cache miss
-            sampleImages[2].downloadUrl to BitmapResult(createSampleBitmap(), true)
+            sampleImages[0].downloadUrl to BitmapResult(createSampleBitmap() ,false,">1s"),
+            sampleImages[1].downloadUrl to BitmapResult(null, true,"~34 ms ago"), // simulates a cache miss
+            sampleImages[2].downloadUrl to BitmapResult(createSampleBitmap(), true,"~34 ms ago")
         )
     }
 
     FeedScreen(
         images = sampleImages,
         bitmapState = sampleBitmapState,
-        onImageVisible = {}
+        onImageVisible = {},
+        onImageClick = { }
     )
 
 

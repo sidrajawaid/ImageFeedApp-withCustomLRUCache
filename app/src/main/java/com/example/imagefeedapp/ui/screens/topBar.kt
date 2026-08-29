@@ -33,7 +33,7 @@ fun ToolBarItem(title: String, onStatsClick: () -> Unit){
                     modifier = Modifier.wrapContentWidth(align = Alignment.Start))
             }
         },
-        actions = {IconButton(onClick = { onStatsClick }) {
+        actions = {IconButton(onClick =  onStatsClick ) {
             Icon(Icons.Default.GridView,"Search")
         }},
         colors = TopAppBarDefaults.mediumTopAppBarColors(

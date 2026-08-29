@@ -29,17 +29,23 @@ import com.example.imagefeedapp.domain.model.ImageModel
 import com.example.imagefeedapp.ui.items.CacheStatusBadge
 
 @Composable
-fun CardItem(imageModel: ImageModel, bitmapImg: BitmapResult?, onVisible: () -> Unit) {
-
+fun CardItem(
+    imageModel: ImageModel,
+    bitmapImg: BitmapResult?,
+    onVisible: () -> Unit,
+    onClick: () -> Unit
+) {
 
     LaunchedEffect(imageModel.downloadUrl) {
         onVisible()
     }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-    ) {
+        onClick = onClick
+        ) {
 
         Column(
             modifier = Modifier
@@ -48,6 +54,7 @@ fun CardItem(imageModel: ImageModel, bitmapImg: BitmapResult?, onVisible: () -> 
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             if (bitmapImg != null) {
+
                 Image(
                     bitmap = (bitmapImg.bitmap)!!.asImageBitmap(),
                     contentDescription = "Photo ${imageModel.id}",
@@ -65,7 +72,7 @@ fun CardItem(imageModel: ImageModel, bitmapImg: BitmapResult?, onVisible: () -> 
                 )
             }
             Text(
-                text = "Photo#:${imageModel.id}",
+                text = "Photo# ${imageModel.id}",
                 modifier = Modifier.padding(start = 16.dp)
             )
             Text(
@@ -99,8 +106,7 @@ fun PreviewCardItem() {
     val item = BitmapResult(sampleBitmapState, true)
     CardItem(
         imageModel = sampleImages,
-        bitmapImg = item,
-        onVisible = {}
+        bitmapImg = item,{},{}
     )
 
 
