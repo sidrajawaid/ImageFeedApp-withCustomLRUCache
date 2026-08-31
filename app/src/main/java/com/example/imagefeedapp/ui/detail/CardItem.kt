@@ -1,8 +1,9 @@
-package com.example.imagefeedapp.ui.screens
+package com.example.imagefeedapp.ui.detail
 
 import android.R
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.ImageModel
-import com.example.imagefeedapp.ui.items.CacheStatusBadge
+import com.example.imagefeedapp.ui.stats.CacheStatusBadge
 
 @Composable
 fun CardItem(
@@ -73,10 +74,12 @@ fun CardItem(
             }
             Text(
                 text = "Photo# ${imageModel.id}",
+                style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(start = 16.dp)
             )
             Text(
                 text = "${imageModel.width} * ${imageModel.height}",
+                style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(start = 16.dp)
             )
             bitmapImg?.let {
@@ -114,6 +117,6 @@ fun PreviewCardItem() {
 
 private fun createSampleBitmap(): Bitmap {
     return Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888).apply {
-        eraseColor(android.graphics.Color.LTGRAY)
+        eraseColor(Color.LTGRAY)
     }
 }

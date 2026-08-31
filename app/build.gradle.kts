@@ -82,6 +82,7 @@ android {
 
         testImplementation(libs.mockito.core)
         testImplementation(libs.mockito.kotlin)
+        debugImplementation(libs.leakcanary.android)
 
 //hilt
         implementation(libs.hilt.android)

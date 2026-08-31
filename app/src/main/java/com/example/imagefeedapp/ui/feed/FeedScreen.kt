@@ -1,6 +1,7 @@
-package com.example.imagefeedapp.ui.screens
+package com.example.imagefeedapp.ui.feed
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.ImageDetailModel
 import com.example.imagefeedapp.domain.model.ImageModel
+import com.example.imagefeedapp.ui.detail.CardItem
 
 
 @Composable
@@ -31,7 +33,7 @@ fun FeedScreen(
             .fillMaxSize()
     ) {
                     LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2), // 2 columns
+                columns = StaggeredGridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp),
@@ -42,7 +44,8 @@ fun FeedScreen(
                     CardItem(
                         imageModel = item,
                         bitmapImg = bitmapState[item.downloadUrl],
-                        onVisible = { onImageVisible(item.downloadUrl)
+                        onVisible = {
+                            onImageVisible(item.downloadUrl)
                         },
                         onClick = {
                             val result = bitmapState[item.downloadUrl]
@@ -77,14 +80,13 @@ fun FeedScreenPreview() {
         images = sampleImages,
         bitmapState = sampleBitmapState,
         onImageVisible = {},
-        onImageClick = { }
-    )
+    ) { }
 
 
 }
 
 private fun createSampleBitmap(): Bitmap {
     return Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888).apply {
-        eraseColor(android.graphics.Color.LTGRAY)
+        eraseColor(Color.LTGRAY)
     }
 }

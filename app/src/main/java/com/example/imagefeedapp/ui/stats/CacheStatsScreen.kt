@@ -1,7 +1,6 @@
 package com.example.imagefeedapp.ui.stats
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,15 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.imagefeedapp.domain.model.CacheStats
-import com.example.imagefeedapp.ui.items.RecentEvictionsItem
-import com.example.imagefeedapp.ui.screens.GridView
-import com.example.imagefeedapp.ui.screens.ProgressView
+import com.example.imagefeedapp.ui.dashboard.GridView
+import com.example.imagefeedapp.ui.dashboard.ProgressView
 
 
 @Composable
@@ -53,19 +49,7 @@ fun CacheStatsScreen(
         modifier = Modifier.fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-            Text(
-                text = "Cache Stats",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-        }
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()

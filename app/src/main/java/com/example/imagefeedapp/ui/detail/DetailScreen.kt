@@ -19,15 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.imagefeedapp.R
-import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.ImageDetailModel
-import com.example.imagefeedapp.domain.model.ImageModel
-import com.example.imagefeedapp.ui.items.CacheStatusBadge
+import com.example.imagefeedapp.ui.stats.CacheStatusBadge
 
 
 @Composable
@@ -42,27 +39,9 @@ fun DetailScreen(detailModel: ImageDetailModel, onBack:()->Unit) {
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-        ) {
-
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-            Text(
-                text = "Photo#${detailModel.imageModel.id}",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-        }
         if (detailModel.bitmapResult.bitmap != null) {
             Image(
-                bitmap = detailModel.bitmapResult.bitmap!!.asImageBitmap(),
+                bitmap = detailModel.bitmapResult.bitmap.asImageBitmap(),
                 contentDescription = "detail of image", modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)

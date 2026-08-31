@@ -1,6 +1,5 @@
-package com.example.imagefeedapp.ui.feed
+package com.example.imagefeedapp.ui.dashboard
 
-import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imagefeedapp.data.loader.BitmapLoader

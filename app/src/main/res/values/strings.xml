@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Image Feed App</string>
     <string name="image_feed">Image Feed</string>
+    <string name="cache_stats">Cache Stats</string>
+    <string name="image_number">Photo#</string>
 </resources>

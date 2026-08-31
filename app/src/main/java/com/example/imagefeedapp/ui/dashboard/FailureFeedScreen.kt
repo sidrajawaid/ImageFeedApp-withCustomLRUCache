@@ -1,10 +1,10 @@
-package com.example.imagefeedapp.ui.screens
+package com.example.imagefeedapp.ui.dashboard
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -17,38 +17,40 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.imagefeedapp.R
 
 
 @Composable
-fun EmptyFeedScreen() {
-    Column(modifier =  Modifier.padding(2.dp,2.dp)
-        .background(Color.White),
+fun FailureFeedScreen(onRetry: () -> Unit) {
+    Column(modifier =  Modifier.padding(16.dp,16.dp).fillMaxSize(),
+       // .background(Color.White),
+
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Image(painter = painterResource(R.drawable.no_image_),
-            contentDescription = "No Image icon", modifier = Modifier.padding(8.dp))
-        Text(text = "No Images yet", modifier = Modifier.padding(8.dp),
+        Image(painter = painterResource(R.drawable.failure),
+            contentDescription = "Failure icon", modifier = Modifier.padding(8.dp))
+        Text(text = "Something went wrong", modifier = Modifier.padding(8.dp),
             fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold)
-        Text(text="Your feed is empty. Pull down to load images.", modifier = Modifier.padding(8.dp))
-        OutlinedButton(onClick = {/* Handle search click */},
+        Text(text="Could not load images. Tap to retry.", modifier = Modifier.padding(8.dp))
+        OutlinedButton(onClick = onRetry,
             modifier = Modifier.padding(8.dp),
             border = BorderStroke(1.dp, Color.Black),
             shape =RoundedCornerShape(8.dp))
         {
             Icon(painter = painterResource(R.drawable.refresh),
-                contentDescription = "Refresh button icon")
+                contentDescription = "Retry Button")
             Spacer(modifier = Modifier.padding(4.dp))
-            Text("Refresh", fontWeight = FontWeight.Bold)
+            Text("Retry", fontWeight = FontWeight.Bold)
         }
     }
 }
 
-@Preview
+
+/*@Preview
 @Composable
-fun PreviewEmptyFeedScreen(){
-    EmptyFeedScreen()
-}
+fun PreviewFailureFeedScreen() {
+FailureFeedScreen()
+}*/
+

@@ -1,4 +1,4 @@
-package com.example.imagefeedapp.ui.feed
+package com.example.imagefeedapp.ui.dashboard
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,18 +15,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.imagefeedapp.domain.model.FeedUiState
 import com.example.imagefeedapp.domain.model.ImageDetailModel
 import com.example.imagefeedapp.ui.detail.DetailScreen
-import com.example.imagefeedapp.ui.detail.DetailViewModel
-import com.example.imagefeedapp.ui.items.FooterFetchingItem
-import com.example.imagefeedapp.ui.screens.EmptyFeedScreen
-import com.example.imagefeedapp.ui.screens.FailureFeedScreen
-import com.example.imagefeedapp.ui.screens.FeedScreen
-import com.example.imagefeedapp.ui.screens.NoConnectionScreen
+import com.example.imagefeedapp.ui.feed.FeedScreen
 
 
 @Composable
 fun DashboardScreen(
     innerPadding: PaddingValues,
-    viewModel: DashboardViewModel = hiltViewModel()
+    viewModel: DashboardViewModel = hiltViewModel(),
+    onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -40,11 +36,11 @@ fun DashboardScreen(
             .fillMaxSize()
     ) {
         if (selectedModel != null) {
-            DetailScreen(selectedModel!!, onBack = { selectedModel = null })
+            DetailScreen(selectedModel!!, onBack = /*{ selectedModel = null }*/onBack)
         } else {
             when (uiState) {
                 is FeedUiState.Loading -> {
-                    FooterFetchingItem()
+                    ShimmerGridPlaceholder()
                 }
 
                 is FeedUiState.Success -> {
@@ -53,21 +49,23 @@ fun DashboardScreen(
                         images = images,
                         bitmapState = bitmapState,
                         onImageVisible = { url -> viewModel.loadBitmap(url) },
-                        onImageClick = {  selectedModel = it }
+                        onImageClick = { selectedModel = it }
+
                     )
 
                 }
 
                 is FeedUiState.Failure -> {
                     FailureFeedScreen(onRetry = { viewModel.loadImages() })
-                }// show empty feed screen
+                }
+
                 is FeedUiState.Empty -> {
                     EmptyFeedScreen()
                 }
 
                 is FeedUiState.NoConnection -> {
-                    NoConnectionScreen()
-                }// show no connection screen
+                    NoConnectionScreen(onRetry = { viewModel.loadImages() })
+                }
             }
         }
     }

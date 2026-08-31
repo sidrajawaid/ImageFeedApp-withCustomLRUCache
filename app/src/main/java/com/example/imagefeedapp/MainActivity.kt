@@ -12,8 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.example.imagefeedapp.ui.feed.DashboardScreen
-import com.example.imagefeedapp.ui.screens.ToolBarItem
+import com.example.imagefeedapp.ui.dashboard.DashboardScreen
+import com.example.imagefeedapp.ui.dashboard.ToolBarItem
 import com.example.imagefeedapp.ui.stats.CacheStatsRoute
 import com.example.imagefeedapp.ui.theme.ImageFeedAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,23 +26,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
+
         setContent {
             ImageFeedAppTheme {
                 var showStats by remember { mutableStateOf(false) }
-
+                var title by remember  { mutableStateOf("") }
                 Scaffold(
                     topBar = {
                         ToolBarItem(
-                            title = stringResource(R.string.image_feed),
+                            screenTitle = title,
                             onStatsClick = { showStats = true }
                         )
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     if (showStats) {
+                       title= stringResource(R.string.image_feed)
                         CacheStatsRoute(onBack = { showStats = false })
                     } else {
-                        DashboardScreen(innerPadding)
+                        title = stringResource(R.string.image_feed)
+                        DashboardScreen(innerPadding=innerPadding, onBack = { showStats = false })
                     }
                 }
             }

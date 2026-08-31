@@ -1,4 +1,4 @@
-package com.example.imagefeedapp.ui.screens
+package com.example.imagefeedapp.ui.dashboard
 
 
 import androidx.compose.foundation.background
