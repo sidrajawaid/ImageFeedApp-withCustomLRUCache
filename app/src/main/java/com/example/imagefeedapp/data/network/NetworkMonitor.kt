@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import com.squareup.leakcanary.core.BuildConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,7 @@ class NetworkMonitor @Inject constructor(
         val initialState = capabilities?.hasCapability(
             NetworkCapabilities.NET_CAPABILITY_INTERNET
         ) == true
+
         trySend(initialState)
 
         val callback = object : ConnectivityManager.NetworkCallback() {

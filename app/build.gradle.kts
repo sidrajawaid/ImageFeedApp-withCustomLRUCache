@@ -1,3 +1,15 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+val localProps = Properties().apply {
+    val propsFile = rootProject.file("local.properties")
+    if (propsFile.exists()) {
+        FileInputStream(propsFile).use { fis ->
+            load(fis) // Load into Properties object
+        }
+    }
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -13,6 +25,10 @@ kotlin {
 android {
     namespace = "com.example.imagefeedapp"
     compileSdk = 37
+
+    buildFeatures{
+        buildConfig=true
+    }
 
 
     configurations.all {
@@ -30,6 +46,11 @@ android {
             versionCode = 1
             versionName = "1.0"
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            buildConfigField(
+                type = "String",
+                name = "UNSPLASH_ACCESS_KEY",
+                value =  "\"${localProps.getProperty("UNSPLASH_ACCESS_KEY")}\""
+            )
         }
 
         buildTypes {
@@ -41,10 +62,12 @@ android {
                 )
             }
         }
+
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_17
             targetCompatibility = JavaVersion.VERSION_17
         }
+
         buildFeatures {
             compose = true
         }
