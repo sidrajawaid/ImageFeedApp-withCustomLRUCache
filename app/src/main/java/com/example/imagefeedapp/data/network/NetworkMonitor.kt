@@ -24,7 +24,7 @@ class NetworkMonitor @Inject constructor(
         ) == true
 
         trySend(initialState)
-
+com.example.imagefeedapp.BuildConfig.UNSPLASH_ACCESS_KEY
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) { trySend(true) }
             override fun onLost(network: Network) { trySend(false) }
