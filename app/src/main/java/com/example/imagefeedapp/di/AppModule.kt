@@ -5,6 +5,8 @@ import com.example.imagefeedapp.data.cache.LRUCache
 import com.example.imagefeedapp.data.loader.BitmapLoader
 import com.example.imagefeedapp.data.remote.PicsumApiService
 import com.example.imagefeedapp.data.network.NetworkMonitor
+import com.example.imagefeedapp.data.remote.UnsplashApiService
+import com.example.imagefeedapp.data.remote.UnsplashAuthInterceptor
 import com.example.imagefeedapp.data.repository.ImageRepositoryImpl
 import com.example.imagefeedapp.domain.repository.ImageRepository
 import dagger.Module
@@ -43,17 +45,22 @@ object AppModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(UnsplashAuthInterceptor())
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
             .build()
     }
 
+
+    // moving to another location()
+    //the new service has to be changed
+    @UnsplashApi
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://picsum.photos/")
+            .baseUrl("https://api.unsplash.com/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -67,8 +74,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideUnsplashApiService(retrofit: Retrofit): UnsplashApiService {
+        return retrofit.create(UnsplashApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideImageRepository(impl: ImageRepositoryImpl): ImageRepository {
         return impl
-        }
+    }
 
 }
+
+annotation class UnsplashApi

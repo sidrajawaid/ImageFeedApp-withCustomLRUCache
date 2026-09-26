@@ -32,47 +32,61 @@ fun FeedScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-                    LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalItemSpacing = 8.dp
-            ) {
-                items(images) { item ->
-                    CardItem(
-                        imageModel = item,
-                        bitmapImg = bitmapState[item.downloadUrl],
-                        onVisible = {
-                            onImageVisible(item.downloadUrl)
-                        },
-                        onClick = {
-                            val result = bitmapState[item.downloadUrl]
-                            if (result?.bitmap != null) {
-                                onImageClick(ImageDetailModel(item, result))
-                            }
-                        })
-                }
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalItemSpacing = 8.dp
+        ) {
+            items(images) { item ->
+                CardItem(
+                    imageModel = item,
+                    bitmapImg = bitmapState[item.smallImageUrl],
+                    onVisible = {
+                        onImageVisible(item.smallImageUrl)
+                    },
+                    onClick = {
+                        val result = bitmapState[item.smallImageUrl]
+                        if (result?.bitmap != null) {
+                            onImageClick(ImageDetailModel(item, result))
+                        }
+                    })
             }
         }
     }
+}
 
 
 @Preview(showBackground = true)
 @Composable
 fun FeedScreenPreview() {
     val sampleImages = listOf(
-        ImageModel(url = "https://example.com/1.jpg", id="1", width = 200, height = 200, downloadUrl = ""),
-        ImageModel(url = "https://example.com/2.jpg", id="1", width = 200, height = 200, downloadUrl = ""),
-        ImageModel(url = "https://example.com/3.jpg", id="1", width = 200, height = 200, downloadUrl = "")
+        ImageModel(
+            smallImageUrl = "https://example.com/1.jpg",
+            id = "1",
+            width = 200,
+            height = 200
+        ),
+        ImageModel(
+            smallImageUrl = "https://example.com/2.jpg",
+            id = "1",
+            width = 200,
+            height = 200
+        ),
+        ImageModel(smallImageUrl = "https://example.com/3.jpg", id = "1", width = 200, height = 200)
     )
 
     val sampleBitmapState = remember {
         mapOf(
-            sampleImages[0].downloadUrl to BitmapResult(createSampleBitmap() ,false,">1s"),
-            sampleImages[1].downloadUrl to BitmapResult(null, true,"~34 ms ago"), // simulates a cache miss
-            sampleImages[2].downloadUrl to BitmapResult(createSampleBitmap(), true,"~34 ms ago")
+            sampleImages[0].smallImageUrl to BitmapResult(createSampleBitmap(), false, ">1s"),
+            sampleImages[1].smallImageUrl to BitmapResult(
+                null,
+                true,
+                "~34 ms ago"
+            ), // simulates a cache miss
+            sampleImages[2].smallImageUrl to BitmapResult(createSampleBitmap(), true, "~34 ms ago")
         )
     }
 

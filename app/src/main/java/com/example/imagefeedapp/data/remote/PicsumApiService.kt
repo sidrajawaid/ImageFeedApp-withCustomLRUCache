@@ -7,4 +7,5 @@ interface PicsumApiService {
     @GET("id/{id}/info")
     suspend fun getImageInfo(@Path("id") id: Int): ImageDto
 
+
 }

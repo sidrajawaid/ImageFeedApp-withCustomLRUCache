@@ -7,10 +7,12 @@ import com.example.imagefeedapp.domain.model.ImageModel
 fun ImageDto.toImageModel(): ImageModel {
         return ImageModel(
             id = this.id,
-            downloadUrl = this.downloadUrl,
+           // downloadUrl = this.downloadUrl,
             width = this.width,
             height= this.height,
-            url =this.url
+            smallImageUrl =this.urls.small,
+            regularImageUrl = this.urls.regular
+
 
         )
     }

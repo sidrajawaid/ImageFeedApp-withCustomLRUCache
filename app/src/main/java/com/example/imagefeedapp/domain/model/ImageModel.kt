@@ -2,8 +2,9 @@ package com.example.imagefeedapp.domain.model
 
 data class ImageModel(
     val id:String,
-    val url:String,
+  //  val urls: UrlsDto,
     val width:Int,
     val height:Int,
-    val downloadUrl:String,
+    val smallImageUrl:String,
+    val regularImageUrl:String=""
  )

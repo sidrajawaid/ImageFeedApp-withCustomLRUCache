@@ -37,7 +37,7 @@ fun CardItem(
     onClick: () -> Unit
 ) {
 
-    LaunchedEffect(imageModel.downloadUrl) {
+    LaunchedEffect(imageModel.smallImageUrl) {
         onVisible()
     }
 
@@ -94,11 +94,10 @@ fun CardItem(
 fun PreviewCardItem() {
     val sampleImages =
         ImageModel(
-            url = "https://example.com/1.jpg",
+            smallImageUrl = "https://example.com/1.jpg",
             id = "1",
             width = 200,
-            height = 200,
-            downloadUrl = ""
+            height = 200
         )
 
     val sampleBitmapState: Bitmap =
