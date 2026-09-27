@@ -97,7 +97,8 @@ fun PreviewCardItem() {
             smallImageUrl = "https://example.com/1.jpg",
             id = "1",
             width = 200,
-            height = 200
+            height = 200,
+            regularImageUrl = ""
         )
 
     val sampleBitmapState: Bitmap =

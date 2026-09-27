@@ -3,6 +3,7 @@ package com.example.imagefeedapp.data.repository
 import com.example.imagefeedapp.data.mapper.toImageModel
 import com.example.imagefeedapp.data.network.NetworkMonitor
 import com.example.imagefeedapp.data.remote.PicsumApiService
+import com.example.imagefeedapp.data.remote.UnsplashApiService
 import com.example.imagefeedapp.domain.repository.ImageRepository
 import com.example.imagefeedapp.domain.model.FeedUiState
 import kotlinx.coroutines.async
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
-    private val picsumApiService: PicsumApiService,
+    private val unSplashApiService: UnsplashApiService,
     private val networkMonitor: NetworkMonitor
 ) : ImageRepository {
     override fun getImages(): Flow<FeedUiState> = flow {
@@ -27,11 +28,8 @@ class ImageRepositoryImpl @Inject constructor(
         emit(FeedUiState.Loading)
 
         try {
-            val images = coroutineScope {
-                (1..50).map { id ->
-                    async { picsumApiService.getImageInfo(id).toImageModel() }
-                }.awaitAll()
-            }
+            val images = unSplashApiService.getImageInformation(page = 1, perPage = 50)
+                .map { it.toImageModel() }
             emit(FeedUiState.Success(images))
         } catch (e: Exception) {
             emit(FeedUiState.Failure("Error Occurred"))

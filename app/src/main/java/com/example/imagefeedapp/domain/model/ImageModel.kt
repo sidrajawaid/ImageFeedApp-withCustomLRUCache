@@ -6,5 +6,5 @@ data class ImageModel(
     val width:Int,
     val height:Int,
     val smallImageUrl:String,
-    val regularImageUrl:String=""
+    val regularImageUrl:String
  )

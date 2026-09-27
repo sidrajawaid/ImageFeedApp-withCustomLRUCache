@@ -67,15 +67,18 @@ fun FeedScreenPreview() {
             smallImageUrl = "https://example.com/1.jpg",
             id = "1",
             width = 200,
-            height = 200
+            height = 200,
+            regularImageUrl = ""
         ),
         ImageModel(
             smallImageUrl = "https://example.com/2.jpg",
             id = "1",
             width = 200,
-            height = 200
+            height = 200,
+            regularImageUrl = ""
         ),
-        ImageModel(smallImageUrl = "https://example.com/3.jpg", id = "1", width = 200, height = 200)
+        ImageModel(smallImageUrl = "https://example.com/3.jpg", id = "1", width = 200, height = 200,
+            regularImageUrl = "")
     )
 
     val sampleBitmapState = remember {
