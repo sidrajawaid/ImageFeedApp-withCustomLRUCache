@@ -21,8 +21,7 @@ import com.example.imagefeedapp.ui.feed.FeedScreen
 @Composable
 fun DashboardScreen(
     innerPadding: PaddingValues,
-    viewModel: DashboardViewModel = hiltViewModel(),
-    onBack: () -> Unit
+    viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -36,7 +35,7 @@ fun DashboardScreen(
             .fillMaxSize()
     ) {
         if (selectedModel != null) {
-            DetailScreen(selectedModel!!, onBack = /*{ selectedModel = null }*/onBack)
+            DetailScreen(selectedModel!!)
         } else {
             when (uiState) {
                 is FeedUiState.Loading -> {

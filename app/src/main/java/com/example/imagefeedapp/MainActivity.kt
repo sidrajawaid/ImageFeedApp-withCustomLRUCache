@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -12,8 +13,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.example.imagefeedapp.domain.model.ImageDetailModel
 import com.example.imagefeedapp.ui.dashboard.DashboardScreen
 import com.example.imagefeedapp.ui.dashboard.ToolBarItem
+import com.example.imagefeedapp.ui.detail.DetailScreen
 import com.example.imagefeedapp.ui.stats.CacheStatsRoute
 import com.example.imagefeedapp.ui.theme.ImageFeedAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,22 +33,42 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImageFeedAppTheme {
                 var showStats by remember { mutableStateOf(false) }
-                var title by remember  { mutableStateOf("") }
+                var selectedModel by remember { mutableStateOf<ImageDetailModel?>(null) }
+
                 Scaffold(
                     topBar = {
-                        ToolBarItem(
-                            screenTitle = title,
-                            onStatsClick = { showStats = true }
-                        )
+                        when {
+                            selectedModel != null -> ToolBarItem(
+                                title = "Photo #${selectedModel!!.imageModel.id}",
+                                showBack = true,
+                                onBackClick = { selectedModel = null },
+                                showStats = false,
+                                onStatsClick = {}
+                            )
+                            showStats -> ToolBarItem(
+                                title = "Cache Stats",
+                                showBack = true,
+                                onBackClick = { showStats = false },
+                                showStats = false,
+                                onStatsClick = {}
+                            )
+                            else -> ToolBarItem(
+                                title = stringResource(R.string.image_feed),
+                                showBack = false,
+                                onBackClick = {},
+                                showStats = true,
+                                onStatsClick = { showStats = true }
+                            )
+                        }
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    if (showStats) {
-                       title= stringResource(R.string.image_feed)
-                        CacheStatsRoute(onBack = { showStats = false })
-                    } else {
-                        title = stringResource(R.string.image_feed)
-                        DashboardScreen(innerPadding=innerPadding, onBack = { showStats = false })
+                    when {
+                        selectedModel != null -> DetailScreen(
+                            detailModel = selectedModel!!
+                        )
+                        showStats -> CacheStatsRoute()
+                        else -> DashboardScreen(innerPadding)
                     }
                 }
             }

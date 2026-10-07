@@ -28,7 +28,7 @@ import com.example.imagefeedapp.ui.stats.CacheStatusBadge
 
 
 @Composable
-fun DetailScreen(detailModel: ImageDetailModel, onBack:()->Unit) {
+fun DetailScreen(detailModel: ImageDetailModel) {
 
   //  val usedMB = cacheStats.currentCacheSize / (1024f * 1024f)
     val cac= (detailModel.bitmapResult.bitmap!!.byteCount)/1024
