@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,35 +23,27 @@ import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToolBarItem(title: String,
-                showBack: Boolean,
-                onBackClick: () -> Unit,
-                showStats: Boolean,
-                onStatsClick: () -> Unit){
+fun ToolBarItem(screenTitle: String, onStatsClick: () -> Unit){
 
 
     TopAppBar(
-        title = { Text(title) },
+        title={Text(text = screenTitle, style = MaterialTheme.typography.titleMedium)},
         navigationIcon = {
-            if (showBack) {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
+            IconButton(onClick = { /*rememberNavController().navigateUp()*/ }) {
+                Icon(Icons.Default.ArrowBack,
+                    contentDescription = "Back Icon",
+                    modifier = Modifier.wrapContentWidth(align = Alignment.Start))
             }
         },
-        actions = {
-            if (showStats) {
-                IconButton(onClick = onStatsClick) {
-                    Icon(
-                        imageVector = Icons.Default.BarChart,
-                        contentDescription = "Cache Stats"
-                    )
-                }
-            }
-        }
+        actions = {IconButton(onClick =  onStatsClick ) {
+            Icon(Icons.Default.GridView,"Search")
+        }},
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = Color(0xFF6200EE),
+            titleContentColor = Color.White,
+            navigationIconContentColor = Color.White,
+            actionIconContentColor = Color.White
+        )
     )
 
 }

@@ -33,7 +33,8 @@ import com.example.imagefeedapp.ui.dashboard.ProgressView
 @Composable
 fun CacheStatsScreen(
     cacheStats: CacheStats,
-    onClearCache: () -> Unit
+    onClearCache: () -> Unit,
+    onBack: () -> Unit
 ) {
 
     val usedMB = cacheStats.currentCacheSize / (1024f * 1024f)
@@ -63,6 +64,8 @@ fun CacheStatsScreen(
         ) {
             GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Hits", cacheStats.hitCount.toString())
             GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Misses", cacheStats.missCount.toString())
+
+
         }
 
         Column(
@@ -122,6 +125,7 @@ fun PreviewCacheStatsScreen() {
             hitRate = 0.87f,
             recentEvictions = emptyList()
         ),
-        onClearCache = {}
+        onClearCache = {},
+        onBack = {}
     )
 }

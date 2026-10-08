@@ -7,7 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun CacheStatsRoute(
-
+    onBack: () -> Unit,
     viewModel: CacheStateViewModel = hiltViewModel()
 ) {
     val cacheStats by viewModel.cacheStats.collectAsStateWithLifecycle()
@@ -15,6 +15,6 @@ fun CacheStatsRoute(
     CacheStatsScreen(
         cacheStats = cacheStats,
         onClearCache = { viewModel.clearCache() },
-
+        onBack = onBack
     )
 }
