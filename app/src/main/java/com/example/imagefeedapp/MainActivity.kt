@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                             else -> ToolBarItem(
                                 title = stringResource(R.string.image_feed),
                                 showBack = false,
-                                onBackClick = {},
+                                onBackClick = {selectedModel = null},
                                 showStats = true,
                                 onStatsClick = { showStats = true }
                             )
