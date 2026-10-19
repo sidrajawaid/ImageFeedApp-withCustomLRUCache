@@ -39,17 +39,12 @@ fun DetailScreen(detailModel: ImageDetailModel, onBack:()->Unit) {
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        if (detailModel.bitmapResult.bitmap != null) {
-            Image(
-                bitmap = detailModel.bitmapResult.bitmap.asImageBitmap(),
-                contentDescription = "detail of image", modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-            )
-        }else {
-            Box(modifier = Modifier.fillMaxWidth().height(300.dp)
-                .background(MaterialTheme.colorScheme.surfaceVariant))
-        }
+        Image(
+            bitmap = detailModel.bitmapResult.bitmap.asImageBitmap(),
+            contentDescription = "detail of image", modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+        )
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = (Alignment.CenterVertically),
