@@ -18,7 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,17 +35,18 @@ import com.example.imagefeedapp.ui.stats.CacheStatusBadge
 @Composable
 fun DetailScreen(detailModel: ImageDetailModel) {
 
-  //  val usedMB = cacheStats.currentCacheSize / (1024f * 1024f)
-    val cac= (detailModel.bitmapResult.bitmap!!.byteCount)/1024
+    //  val usedMB = cacheStats.currentCacheSize / (1024f * 1024f)
+    val cac = (detailModel.bitmapResult.bitmap!!.byteCount) / 1024
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Image(
             bitmap = detailModel.bitmapResult.bitmap.asImageBitmap(),
+            contentScale = ContentScale.FillWidth,
             contentDescription = "detail of image", modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
@@ -52,16 +58,19 @@ fun DetailScreen(detailModel: ImageDetailModel) {
         ) {
             CacheStatusBadge(detailModel.bitmapResult.isFromCache)
             Text(
+
                 if (detailModel.bitmapResult.isFromCache) "Loaded instantly" else "Loaded from network",
-                fontSize = 11.sp
+                fontSize = 11.sp, fontWeight = FontWeight.Bold
             )
         }
         /*val maxMemory = Runtime.getRuntime().maxMemory()
         val cacheSize = (maxMemory / 8).toInt()/ (1024f * 1024f)*/
 
-        Column (modifier =  Modifier.padding(all = 4.dp)){
-                        ImageDetail((R.drawable.image_id), "ImageID",
-                            "picsum/${detailModel.imageModel.id}")
+        Column(modifier = Modifier.padding(all = 4.dp).background(color = MaterialTheme.colorScheme.background) ) {
+            ImageDetail(
+                (R.drawable.image_id), "ImageID",
+                "picsum/${detailModel.imageModel.id}"
+            )
             ImageDetail(
                 (R.drawable.dimension),
                 "Dimensions",
@@ -82,8 +91,8 @@ fun DetailScreen(detailModel: ImageDetailModel) {
 @Composable
 fun PreviewDetailScreen() {
 
- /*  val bitmapResult=  BitmapResult("bmp-icon-32x32.bmp,true)
-    val bitmapImage= ImageModel("13","photo/picsum/765*567",678,876,"url/1")
-DetailScreen(ImageDetailModel(imageModel =bitmapImage,
-    bitmapResult = bitmapResult),{})*/
+    /*  val bitmapResult=  BitmapResult("bmp-icon-32x32.bmp,true)
+       val bitmapImage= ImageModel("13","photo/picsum/765*567",678,876,"url/1")
+   DetailScreen(ImageDetailModel(imageModel =bitmapImage,
+       bitmapResult = bitmapResult),{})*/
 }

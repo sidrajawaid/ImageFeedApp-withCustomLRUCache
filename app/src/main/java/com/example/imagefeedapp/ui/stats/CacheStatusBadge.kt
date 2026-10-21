@@ -29,7 +29,7 @@ fun CacheStatusBadge(isFromCache: Boolean) {
 
     Row(
         modifier = Modifier
-            .padding(start = 8.dp, bottom = 8.dp)
+            .padding(all = 8.dp)
             .background(backgroundColor, RoundedCornerShape(10.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically

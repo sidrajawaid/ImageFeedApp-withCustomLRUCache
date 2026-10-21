@@ -21,12 +21,12 @@ import com.example.imagefeedapp.R
 fun ImageDetail(painterResource: Int, key: String, value: String) {
     Row(horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(horizontal = 16.dp)) {
+        modifier = Modifier.padding(all = 16.dp)) {
     Image(painterResource(painterResource),
         contentDescription = "image description",
         modifier = Modifier.size(20.dp,20.dp))
-    Text(text =key, modifier = Modifier.padding(start = 6.dp))
-    Text(text = value , modifier = Modifier.padding(start = 10.dp),
+    Text(text =key, modifier = Modifier.padding(start = 10.dp))
+    Text(text = value , modifier = Modifier.padding(start = 30.dp),
         fontWeight = FontWeight.Bold)
 }
 
