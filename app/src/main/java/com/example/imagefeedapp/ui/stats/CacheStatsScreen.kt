@@ -1,9 +1,12 @@
 package com.example.imagefeedapp.ui.stats
 
+import android.R
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -78,11 +82,12 @@ fun CacheStatsScreen(
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp)
             ProgressView(Color.Blue,
-                usedMB, "Used",
-                /*"%.1f / %.1f MB".format(usedMB, maxMB)*/memoryUsagePercent.toString()+" MB")
+                usedMB/100, "Used",
+                "%.1f MB".format(memoryUsagePercent)
+                /*"%.1f / %.1f MB".format(usedMB, maxMB)*/)
 
             ProgressView(Color.Green,
-                (cacheStats.hitRate * 100),
+                (cacheStats.hitRate / 100),
                 "Hit rate",
                 "%.0f%%".format(cacheStats.hitRate))
 
@@ -100,9 +105,13 @@ fun CacheStatsScreen(
                 }
             }
             }
-        OutlinedButton(onClick = onClearCache, modifier = Modifier.fillMaxWidth(),
-            border = BorderStroke(2.dp,Color.Red))  {
-            Text("Clear Cache", color = Color.Red)
+        Spacer(modifier = Modifier.weight(1f))
+        FilledTonalButton(onClick = onClearCache,
+
+            modifier = Modifier.fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.onPrimary)
+                .padding(all  =16.dp))  {
+            Text("Clear Cache", color = MaterialTheme.colorScheme.primary)
         }
         }
 
