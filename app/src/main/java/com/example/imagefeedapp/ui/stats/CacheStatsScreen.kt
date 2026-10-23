@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -25,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,7 +52,8 @@ fun CacheStatsScreen(
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp)
     ) {
 
@@ -58,15 +62,37 @@ fun CacheStatsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            GridView(modifier = Modifier.weight(1f),Color(0xFF954646FF), "Hit Rate", "%.0f%%".format(cacheStats.hitRate * 100))
-            GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Cache size", "%.1f MB".format(usedMB))
+            GridView(
+                modifier = Modifier.weight(1f),
+                Color(0xFF954646FF),
+                "Hit Rate",
+                "%.0f%%".format(cacheStats.hitRate * 100)
+            )
+            GridView(
+                modifier = Modifier.weight(1f),
+                Color(0xFF5B7837FF),
+                "Cache size",
+                "%.1f MB".format(usedMB)
+            )
         }
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth().padding(top=8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
         ) {
-            GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Hits", cacheStats.hitCount.toString())
-            GridView(modifier = Modifier.weight(1f),Color(0xFF5B7837FF), "Misses", cacheStats.missCount.toString())
+            GridView(
+                modifier = Modifier.weight(1f),
+                Color(0xFF5B7837FF),
+                "Hits",
+                cacheStats.hitCount.toString()
+            )
+            GridView(
+                modifier = Modifier.weight(1f),
+                Color(0xFF5B7837FF),
+                "Misses",
+                cacheStats.missCount.toString()
+            )
         }
 
         Column(
@@ -76,46 +102,68 @@ fun CacheStatsScreen(
                 .wrapContentHeight()
         )
         {
-            Text(text = "MEMORY USAGE",
-                modifier = Modifier.fillMaxWidth()
-                    .padding(top=8.dp),
+            Text(
+                text = "MEMORY USAGE",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp)
-            ProgressView(Color.Blue,
-                usedMB/100, "Used",
+                fontSize = 16.sp
+            )
+            ProgressView(
+                Color.Blue,
+                usedMB / 100, "Used",
                 "%.1f MB".format(memoryUsagePercent)
-                /*"%.1f / %.1f MB".format(usedMB, maxMB)*/)
+                /*"%.1f / %.1f MB".format(usedMB, maxMB)*/
+            )
 
-            ProgressView(Color.Green,
+            ProgressView(
+                Color.Green,
                 (cacheStats.hitRate / 100),
                 "Hit rate",
-                "%.0f%%".format(cacheStats.hitRate))
+                "%.0f%%".format(cacheStats.hitRate)
+            )
 
-            Text("RECENT EVICTIONS",
-                modifier = Modifier.padding(top=8.dp),
+            Text(
+                "RECENT EVICTIONS",
+                modifier = Modifier.padding(top = 8.dp),
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp)
-
-            LazyColumn(modifier = Modifier.height(150.dp))
+                fontSize = 16.sp
+            )
+            if (cacheStats.recentEvictions.isEmpty())
+                Text(
+                   text =  "No recent Evictions found...", modifier = Modifier
+                        .padding(16.dp)
+                        .wrapContentSize(align = Alignment.Center),
+                    //
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 16.sp,
+                )
+            else
+            LazyColumn(modifier = Modifier.height(150.dp).background(Color.Green))
             {
-                items(cacheStats.recentEvictions){
-                    item->
-                    RecentEvictionsItem("Photo#${item.url.split("/").getOrNull(5) ?: item.url}",
-                        "${item.sizeBytes / 1024}KB - ${(System.currentTimeMillis() - item.timestamp) / 1000}s ago")
+                items(cacheStats.recentEvictions) { item ->
+                    RecentEvictionsItem(
+                        "Photo#${item.url.split("/").getOrNull(5) ?: item.url}",
+                        "${item.sizeBytes / 1024}KB - ${(System.currentTimeMillis() - item.timestamp) / 1000}s ago"
+                    )
                 }
             }
-            }
-        Spacer(modifier = Modifier.weight(1f))
-        FilledTonalButton(onClick = onClearCache,
+        }
+        //Spacer(modifier = Modifier.weight(2f))
+        FilledTonalButton(
+            onClick = onClearCache,
 
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .background(color = MaterialTheme.colorScheme.onPrimary)
-                .padding(all  =16.dp))  {
+                .padding(all = 16.dp)
+        ) {
             Text("Clear Cache", color = MaterialTheme.colorScheme.primary)
         }
-        }
-
     }
+
+}
 
 
 @Preview

@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                             detailModel = selectedModel!!
                         )
                         showStats -> CacheStatsRoute()
-                        else -> DashboardScreen(innerPadding)
+                        else -> DashboardScreen(innerPadding,onImageClick = { selectedModel = it } )
                     }
                 }
             }

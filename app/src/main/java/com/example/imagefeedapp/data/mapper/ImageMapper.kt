@@ -5,6 +5,7 @@ import com.example.imagefeedapp.domain.model.ImageModel
 
 
 fun ImageDto.toImageModel(): ImageModel {
+
         return ImageModel(
             id = this.id,
            // downloadUrl = this.downloadUrl,

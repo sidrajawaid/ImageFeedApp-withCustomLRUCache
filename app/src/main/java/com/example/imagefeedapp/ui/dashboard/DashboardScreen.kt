@@ -21,11 +21,10 @@ import com.example.imagefeedapp.ui.feed.FeedScreen
 @Composable
 fun DashboardScreen(
     innerPadding: PaddingValues,
-    viewModel: DashboardViewModel = hiltViewModel()
+    viewModel: DashboardViewModel = hiltViewModel(),
+    onImageClick: (ImageDetailModel) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    var selectedModel by remember { mutableStateOf<ImageDetailModel?>(null) }
 
     val bitmapState by viewModel.bitmapState.collectAsStateWithLifecycle()
 
@@ -34,9 +33,7 @@ fun DashboardScreen(
             .padding(innerPadding)
             .fillMaxSize()
     ) {
-        if (selectedModel != null) {
-            DetailScreen(selectedModel!!)
-        } else {
+
             when (uiState) {
                 is FeedUiState.Loading -> {
                     ShimmerGridPlaceholder()
@@ -48,7 +45,7 @@ fun DashboardScreen(
                         images = images,
                         bitmapState = bitmapState,
                         onImageVisible = { small -> viewModel.loadBitmap(small) },
-                        onImageClick = { selectedModel = it }
+                        onImageClick = onImageClick
 
                     )
 
@@ -66,7 +63,7 @@ fun DashboardScreen(
                     NoConnectionScreen(onRetry = { viewModel.loadImages() })
                 }
             }
-        }
+
     }
 }
 
