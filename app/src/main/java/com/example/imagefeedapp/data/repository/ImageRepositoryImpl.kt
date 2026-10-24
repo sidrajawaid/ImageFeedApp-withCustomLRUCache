@@ -28,8 +28,14 @@ class ImageRepositoryImpl @Inject constructor(
         emit(FeedUiState.Loading)
 
         try {
-            val images = unSplashApiService.getImageInformation(page = 1, perPage = 50)
+            val page1 = unSplashApiService.getImageInformation(page = 1, perPage = 20)
+            val page2 = unSplashApiService.getImageInformation(page = 2, perPage = 20)
+            val page3 = unSplashApiService.getImageInformation(page = 3, perPage = 20)
+
+            val images = (page1 + page2 + page3)
                 .map { it.toImageModel() }
+                .take(50)
+
             emit(FeedUiState.Success(images))
         } catch (e: Exception) {
             emit(FeedUiState.Failure("Error Occurred"))

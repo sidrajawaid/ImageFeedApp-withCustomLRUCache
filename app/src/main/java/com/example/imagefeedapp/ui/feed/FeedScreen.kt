@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -40,8 +39,10 @@ fun FeedScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalItemSpacing = 8.dp
         ) {
-            items(images) { item ->
+            items(images.size) { index ->
+              val  item=images[index]
                 CardItem(
+index+1,
                     imageModel = item,
                     bitmapImg = bitmapState[item.smallImageUrl],
                     onVisible = {
@@ -50,7 +51,7 @@ fun FeedScreen(
                     onClick = {
                         val result = bitmapState[item.smallImageUrl]
                         if (result?.bitmap != null) {
-                            onImageClick(ImageDetailModel(item, result))
+                            onImageClick(ImageDetailModel(item, result,index+1))
                         }
                     })
             }

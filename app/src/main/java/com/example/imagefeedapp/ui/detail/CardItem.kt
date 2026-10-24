@@ -31,6 +31,7 @@ import com.example.imagefeedapp.ui.stats.CacheStatusBadge
 
 @Composable
 fun CardItem(
+    sequenceNumber: Int,
     imageModel: ImageModel,
     bitmapImg: BitmapResult?,
     onVisible: () -> Unit,
@@ -58,7 +59,7 @@ fun CardItem(
 
                 Image(
                     bitmap = (bitmapImg.bitmap)!!.asImageBitmap(),
-                    contentDescription = "Photo ${imageModel.id}",
+                    contentDescription = "Photo $sequenceNumber",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -73,7 +74,7 @@ fun CardItem(
                 )
             }
             Text(
-                text = "Photo# ${imageModel.id}",
+                text = "Photo# $sequenceNumber",
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(start = 16.dp)
             )
@@ -100,6 +101,7 @@ fun PreviewCardItem() {
             height = 200,
             regularImageUrl = ""
         )
+    val index=0
 
     val sampleBitmapState: Bitmap =
         BitmapFactory.decodeResource(
@@ -108,9 +110,9 @@ fun PreviewCardItem() {
         )
     val item = BitmapResult(sampleBitmapState, true)
     CardItem(
-        imageModel = sampleImages,
-        bitmapImg = item,{},{}
-    )
+        index+1,
+        imageModel = sampleImages, bitmapImg = item, {}
+    ) {}
 
 
 }
