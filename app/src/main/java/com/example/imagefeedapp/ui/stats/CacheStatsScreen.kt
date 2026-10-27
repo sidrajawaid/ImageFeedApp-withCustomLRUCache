@@ -2,8 +2,10 @@ package com.example.imagefeedapp.ui.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,118 +42,123 @@ fun CacheStatsScreen(
 
     val memoryUsagePercent = if (cacheStats.maxSize == 0) 0f
     else cacheStats.currentCacheSize.toFloat() / cacheStats.maxSize
-
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp)
+            .fillMaxSize()
     ) {
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            GridView(
-                modifier = Modifier.weight(1f),
-                Color(0xFF954646FF),
-                "Hit Rate",
-                "%.0f%%".format(cacheStats.hitRate * 100)
-            )
-            GridView(
-                modifier = Modifier.weight(1f),
-                Color(0xFF5B7837FF),
-                "Cache size",
-                "%.1f MB".format(usedMB)
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-        ) {
-            GridView(
-                modifier = Modifier.weight(1f),
-                Color(0xFF5B7837FF),
-                "Hits",
-                cacheStats.hitCount.toString()
-            )
-            GridView(
-                modifier = Modifier.weight(1f),
-                Color(0xFF5B7837FF),
-                "Misses",
-                cacheStats.missCount.toString()
-            )
-        }
-
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
-                .wrapContentHeight()
-        )
-        {
-            Text(
-                text = "MEMORY USAGE",
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp)
+        ) {
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+
+                GridView(
+                    modifier = Modifier.weight(1f),
+                    Color(0xFF954646FF),
+                    "Hit Rate",
+                    "%.0f%%".format(cacheStats.hitRate * 100)
+                )
+                GridView(
+                    modifier = Modifier.weight(1f),
+                    Color(0xFF5B7837FF),
+                    "Cache size",
+                    "%.1f MB".format(usedMB)
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
-            ProgressView(
-                Color.Blue,
-                usedMB / 100, "Used",
-                "%.1f MB".format(memoryUsagePercent)
-                /*"%.1f / %.1f MB".format(usedMB, maxMB)*/
-            )
-
-            ProgressView(
-                Color.Green,
-                (cacheStats.hitRate / 100),
-                "Hit rate",
-                "%.0f%%".format(cacheStats.hitRate)
-            )
-
-            Text(
-                "RECENT EVICTIONS",
-                modifier = Modifier.padding(top = 8.dp),
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
-            if (cacheStats.recentEvictions.isEmpty())
-                Text(
-                   text =  "No recent Evictions found...", modifier = Modifier
-                        .padding(16.dp)
-                        .wrapContentSize(align = Alignment.Center),
-                    //
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 16.sp,
+                    .padding(top = 8.dp)
+            ) {
+                GridView(
+                    modifier = Modifier.weight(1f),
+                    Color(0xFF5B7837FF),
+                    "Hits",
+                    cacheStats.hitCount.toString()
                 )
-            else
-            LazyColumn(modifier = Modifier.height(150.dp))
-            {
-                items(cacheStats.recentEvictions) { item ->
-                    RecentEvictionsItem(
-                        "Photo#${sequenceNumber/*item.url.split("/").getOrNull(5) ?: item.url*/}",
-                        "${item.sizeBytes / 1024}KB - ${(System.currentTimeMillis() - item.timestamp) / 1000}s ago"
-                    )
-                }
+                GridView(
+                    modifier = Modifier.weight(1f),
+                    Color(0xFF5B7837FF),
+                    "Misses",
+                    cacheStats.missCount.toString()
+                )
             }
-        }
-        //Spacer(modifier = Modifier.weight(2f))
-        FilledTonalButton(
-            onClick = onClearCache,
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.onPrimary)
-                .padding(all = 16.dp)
-        ) {
-            Text("Clear Cache", color = MaterialTheme.colorScheme.primary)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .wrapContentHeight()
+            )
+            {
+                Text(
+                    text = "MEMORY USAGE",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                ProgressView(
+                    Color.Blue,
+                    usedMB / 100, "Used",
+                    "%.1f MB".format(memoryUsagePercent)
+                    /*"%.1f / %.1f MB".format(usedMB, maxMB)*/
+                )
+
+                ProgressView(
+                    Color.Green,
+                    (cacheStats.hitRate / 100),
+                    "Hit rate",
+                    "%.0f%%".format(cacheStats.hitRate)
+                )
+
+                Text(
+                    "RECENT EVICTIONS",
+                    modifier = Modifier.padding(top = 8.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                if (cacheStats.recentEvictions.isEmpty())
+                    Text(
+                        text = "No recent Evictions found...",
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .wrapContentSize(align = Alignment.Center),
+                        //
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 16.sp,
+                    )
+                else
+                    LazyColumn(modifier = Modifier.height(150.dp))
+                    {
+                        items(cacheStats.recentEvictions) { item ->
+                            RecentEvictionsItem(
+                                "Photo#${sequenceNumber/*item.url.split("/").getOrNull(5) ?: item.url*/}",
+                                "${item.sizeBytes / 1024}KB - ${(System.currentTimeMillis() - item.timestamp) / 1000}s ago"
+                            )
+                        }
+                    }
+            }
+            //Spacer(modifier = Modifier.weight(2f))
+            FilledTonalButton(
+                onClick = onClearCache,
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.onPrimary)
+                    .padding(all = 16.dp)
+            ) {
+                Text("Clear Cache", color = MaterialTheme.colorScheme.primary)
+            }
         }
     }
 

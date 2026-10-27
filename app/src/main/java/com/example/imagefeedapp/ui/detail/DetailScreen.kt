@@ -69,7 +69,7 @@ fun DetailScreen(detailModel: ImageDetailModel) {
         Column(modifier = Modifier.padding(all = 4.dp).background(color = MaterialTheme.colorScheme.background) ) {
             ImageDetail(
                 (R.drawable.image_id), "ImageID",
-                "unsplash/${detailModel.imageModel.id}"
+                "unsplash/${detailModel.indexNumber}"
             )
             ImageDetail(
                 (R.drawable.dimension),

@@ -74,12 +74,12 @@ fun CardItem(
                 )
             }
             Text(
-                text = "Photo# $sequenceNumber",
+                text = "Photo#$sequenceNumber",
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(start = 16.dp)
             )
             Text(
-                text = "${imageModel.width} * ${imageModel.height}",
+                text = "${imageModel.width} x ${imageModel.height}",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(start = 16.dp)
             )
