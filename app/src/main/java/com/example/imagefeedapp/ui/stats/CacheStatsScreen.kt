@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,6 +34,7 @@ import com.example.imagefeedapp.ui.dashboard.ProgressView
 
 @Composable
 fun CacheStatsScreen(
+    paddingValues: PaddingValues,
     cacheStats: CacheStats,
     onClearCache: () -> Unit,
     sequenceNumber: Int
@@ -44,6 +47,7 @@ fun CacheStatsScreen(
     else cacheStats.currentCacheSize.toFloat() / cacheStats.maxSize
     Box(
         modifier = Modifier
+            .padding(paddingValues)
             .fillMaxSize()
     ) {
         Column(
@@ -148,7 +152,7 @@ fun CacheStatsScreen(
                         }
                     }
             }
-            //Spacer(modifier = Modifier.weight(2f))
+            Spacer(modifier = Modifier.weight(2f))
             FilledTonalButton(
                 onClick = onClearCache,
 
@@ -168,7 +172,8 @@ fun CacheStatsScreen(
 @Preview
 @Composable
 fun PreviewCacheStatsScreen() {
-    CacheStatsScreen(
+    /*CacheStatsScreen(
+        paddingValues,
         cacheStats = CacheStats(
             currentCacheSize = 14000000,
             maxSize = 32000000,
@@ -180,5 +185,5 @@ fun PreviewCacheStatsScreen() {
         ),
         onClearCache = {},
         12
-    )
+    )*/
 }
