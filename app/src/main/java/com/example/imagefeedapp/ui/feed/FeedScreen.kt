@@ -22,7 +22,7 @@ import com.example.imagefeedapp.ui.detail.CardItem
 @Composable
 fun FeedScreen(
     images: List<ImageModel>, bitmapState: Map<String, BitmapResult?>,
-    onImageVisible: (String) -> Unit,
+    onImageVisible: (ImageModel) -> Unit,
     onImageClick: (ImageDetailModel) -> Unit
 ) {
 
@@ -40,18 +40,18 @@ fun FeedScreen(
             verticalItemSpacing = 8.dp
         ) {
             items(images.size) { index ->
-              val  item=images[index]
+                val item = images[index]
                 CardItem(
-index+1,
+                    sequenceNumber = item.sequenceNumber,
                     imageModel = item,
                     bitmapImg = bitmapState[item.smallImageUrl],
                     onVisible = {
-                        onImageVisible(item.smallImageUrl)
+                        onImageVisible(item)
                     },
                     onClick = {
                         val result = bitmapState[item.smallImageUrl]
                         if (result?.bitmap != null) {
-                            onImageClick(ImageDetailModel(item, result,index+1))
+                            onImageClick(ImageDetailModel(item, result))
                         }
                     })
             }
@@ -65,6 +65,7 @@ index+1,
 fun FeedScreenPreview() {
     val sampleImages = listOf(
         ImageModel(
+            sequenceNumber = 0,
             smallImageUrl = "https://example.com/1.jpg",
             id = "1",
             width = 200,
@@ -72,14 +73,18 @@ fun FeedScreenPreview() {
             regularImageUrl = ""
         ),
         ImageModel(
+            sequenceNumber = 1,
             smallImageUrl = "https://example.com/2.jpg",
             id = "1",
             width = 200,
             height = 200,
             regularImageUrl = ""
         ),
-        ImageModel(smallImageUrl = "https://example.com/3.jpg", id = "1", width = 200, height = 200,
-            regularImageUrl = "")
+        ImageModel(
+            sequenceNumber = 2,
+            smallImageUrl = "https://example.com/3.jpg", id = "1", width = 200, height = 200,
+            regularImageUrl = ""
+        )
     )
 
     val sampleBitmapState = remember {

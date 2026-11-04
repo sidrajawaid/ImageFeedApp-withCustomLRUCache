@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class BitmapLoader @Inject constructor( private val okHttpClient: OkHttpClient,
     private val lruImageCache: LRUCache) {
-    suspend fun loadBitmap(url: String): BitmapResult? {
+    suspend fun loadBitmap(url: String, sequenceNumber: String): BitmapResult? {
 
         val cached = lruImageCache.getBitmap(url)
         if (cached != null) {

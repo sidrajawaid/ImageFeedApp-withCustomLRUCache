@@ -44,7 +44,7 @@ fun DashboardScreen(
                     FeedScreen(
                         images = images,
                         bitmapState = bitmapState,
-                        onImageVisible = { small -> viewModel.loadBitmap(small) },
+                        onImageVisible = { model -> viewModel.loadBitmap(model.smallImageUrl,model.sequenceNumber) },
                         onImageClick = onImageClick
 
                     )

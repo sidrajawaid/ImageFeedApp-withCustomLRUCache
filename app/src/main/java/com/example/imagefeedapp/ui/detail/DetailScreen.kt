@@ -59,7 +59,8 @@ fun DetailScreen(detailModel: ImageDetailModel) {
             CacheStatusBadge(detailModel.bitmapResult.isFromCache)
             Text(
 
-                if (detailModel.bitmapResult.isFromCache) "Loaded instantly" else "Loaded from network",
+                if (detailModel.bitmapResult.isFromCache) "Loaded instantly"
+                else "Loaded from network",
                 fontSize = 11.sp, fontWeight = FontWeight.Bold
             )
         }
@@ -69,7 +70,7 @@ fun DetailScreen(detailModel: ImageDetailModel) {
         Column(modifier = Modifier.padding(all = 4.dp).background(color = MaterialTheme.colorScheme.background) ) {
             ImageDetail(
                 (R.drawable.image_id), "ImageID",
-                "unsplash/${detailModel.indexNumber}"
+                "unsplash/${detailModel.imageModel.sequenceNumber}"
             )
             ImageDetail(
                 (R.drawable.dimension),

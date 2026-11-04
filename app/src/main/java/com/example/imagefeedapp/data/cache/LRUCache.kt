@@ -1,7 +1,6 @@
 package com.example.imagefeedapp.data.cache
 
 import android.graphics.Bitmap
-import android.util.Log
 import com.example.imagefeedapp.domain.model.CacheStats
 import com.example.imagefeedapp.domain.model.EvictionRecord
 
@@ -16,7 +15,7 @@ class LRUCache(val cacheSize:Int) {
 
     private val evictionHistory = ArrayDeque<EvictionRecord>(10)
     @Synchronized
-    fun addUrlEntry(url: String, bitmap: Bitmap) {
+    fun addUrlEntry(url: String, bitmap: Bitmap, label: String = "") {
 
         if (bitmap.byteCount > cacheSize)
             return
@@ -26,6 +25,7 @@ class LRUCache(val cacheSize:Int) {
         }
         map[url] = bitmap
         currentSize += bitmap.byteCount
+
     }
 
     @Synchronized
@@ -40,18 +40,33 @@ class LRUCache(val cacheSize:Int) {
     }
     @Synchronized
     fun deleteUrlEntry() {
+
         val firstEntry = map.entries.iterator().next()
-        Log.d("LRUCache", "Evicting: ${firstEntry.key}")
         map.remove(firstEntry.key)
         currentSize -= firstEntry.value.byteCount
         deletedUrls++
-        if (evictionHistory.size >= 10) evictionHistory.removeFirst()
         evictionHistory.addLast(
             EvictionRecord(
                 url = firstEntry.key,
+                sequenceNumber=getIndexFromKey(firstEntry.key),
                 sizeBytes = firstEntry.value.byteCount
             )
         )
+
+    }
+    fun  getIndexFromKey( key: String): Int {
+        if (key == null) {
+            return -1 // Invalid input
+        }
+
+        var index = 0
+        for (currentKey in map.keys) {
+            if (currentKey == key) {
+                return index
+            }
+            index++
+        }
+        return -1 // Key not found
     }
 
     @Synchronized

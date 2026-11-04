@@ -2,13 +2,9 @@ package com.example.imagefeedapp.data.repository
 
 import com.example.imagefeedapp.data.mapper.toImageModel
 import com.example.imagefeedapp.data.network.NetworkMonitor
-import com.example.imagefeedapp.data.remote.PicsumApiService
 import com.example.imagefeedapp.data.remote.UnsplashApiService
 import com.example.imagefeedapp.domain.repository.ImageRepository
 import com.example.imagefeedapp.domain.model.FeedUiState
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -33,7 +29,7 @@ class ImageRepositoryImpl @Inject constructor(
             val page3 = unSplashApiService.getImageInformation(page = 3, perPage = 20)
 
             val images = (page1 + page2 + page3)
-                .map { it.toImageModel() }
+                .mapIndexed { index, dto ->  dto.toImageModel(seqNum = index + 1) }
                 .take(50)
 
             emit(FeedUiState.Success(images))

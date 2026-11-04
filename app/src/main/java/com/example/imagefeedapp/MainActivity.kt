@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         when {
                             selectedModel != null -> ToolBarItem(
-                                title = "Photo #${selectedModel!!.indexNumber}",
+                                title = "Photo #${selectedModel!!.imageModel.sequenceNumber}",
                                 showBack = true,
                                 onBackClick = { selectedModel = null },
                                 showStats = false,
@@ -67,7 +67,8 @@ class MainActivity : ComponentActivity() {
                         selectedModel != null -> DetailScreen(
                             detailModel = selectedModel!!
                         )
-                        showStats -> CacheStatsRoute(innerPadding,selectedModel?.indexNumber ?: 0)
+                        showStats -> CacheStatsRoute(innerPadding,
+                            selectedModel?.imageModel!!.sequenceNumber ?: 0)
                         else -> DashboardScreen(innerPadding,onImageClick = { selectedModel = it } )
                     }
                 }

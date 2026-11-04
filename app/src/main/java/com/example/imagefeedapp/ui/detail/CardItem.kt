@@ -38,7 +38,7 @@ fun CardItem(
     onClick: () -> Unit
 ) {
 
-    LaunchedEffect(imageModel.smallImageUrl) {
+    LaunchedEffect(imageModel.smallImageUrl + imageModel.sequenceNumber) {
         onVisible()
     }
 
@@ -90,35 +90,4 @@ fun CardItem(
     }
 }
 
-@Composable
-@Preview
-fun PreviewCardItem() {
-    val sampleImages =
-        ImageModel(
-            smallImageUrl = "https://example.com/1.jpg",
-            id = "1",
-            width = 200,
-            height = 200,
-            regularImageUrl = ""
-        )
-    val index=0
 
-    val sampleBitmapState: Bitmap =
-        BitmapFactory.decodeResource(
-            LocalContext.current.resources,
-            R.drawable.ic_menu_report_image
-        )
-    val item = BitmapResult(sampleBitmapState, true)
-    CardItem(
-        index+1,
-        imageModel = sampleImages, bitmapImg = item, {}
-    ) {}
-
-
-}
-
-private fun createSampleBitmap(): Bitmap {
-    return Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888).apply {
-        eraseColor(Color.LTGRAY)
-    }
-}
