@@ -5,15 +5,16 @@ import com.example.imagefeedapp.domain.model.CacheStats
 import com.example.imagefeedapp.domain.model.EvictionRecord
 
 
-class LRUCache(val cacheSize:Int) {
+class LRUCache(val cacheSize: Int) {
 
-   private var map: LinkedHashMap<String, Bitmap> = LinkedHashMap(0,0.75f,true)
+    private var map: LinkedHashMap<String, Bitmap> = LinkedHashMap(0, 0.75f, true)
     private var currentSize = 0
     private var hitUrls = 0
     private var missUrls = 0;
     private var deletedUrls = 0
 
     private val evictionHistory = ArrayDeque<EvictionRecord>(10)
+
     @Synchronized
     fun addUrlEntry(url: String, bitmap: Bitmap, label: String = "") {
 
@@ -30,7 +31,7 @@ class LRUCache(val cacheSize:Int) {
 
     @Synchronized
     fun getBitmap(url: String): Bitmap? {
-        val bitmap=map[url]
+        val bitmap = map[url]
         if (bitmap != null) {
             hitUrls++    // cache hit
         } else {
@@ -38,31 +39,31 @@ class LRUCache(val cacheSize:Int) {
         }
         return bitmap
     }
+
     @Synchronized
     fun deleteUrlEntry() {
 
         val firstEntry = map.entries.iterator().next()
-        map.remove(firstEntry.key)
+
+
         currentSize -= firstEntry.value.byteCount
         deletedUrls++
         evictionHistory.addLast(
             EvictionRecord(
                 url = firstEntry.key,
-                sequenceNumber=getIndexFromKey(firstEntry.key),
+                sequenceNumber = getIndexFromKey(firstEntry.key),
                 sizeBytes = firstEntry.value.byteCount
             )
         )
+        map.remove(firstEntry.key)
 
     }
-    fun  getIndexFromKey( key: String): Int {
-        if (key == null) {
-            return -1 // Invalid input
-        }
 
+    fun getIndexFromKey(key: String): Int {
         var index = 0
-        for (currentKey in map.keys) {
-            if (currentKey == key) {
-                return index
+        for ((i, containKey) in map.keys.withIndex()) {
+            if (containKey == key) {
+                return i
             }
             index++
         }
@@ -88,7 +89,7 @@ class LRUCache(val cacheSize:Int) {
             missCount = missUrls,
             evictionCount = deletedUrls,
             hitRate = hitRate,
-            recentEvictions=evictionHistory
+            recentEvictions = evictionHistory
         )
 
     }

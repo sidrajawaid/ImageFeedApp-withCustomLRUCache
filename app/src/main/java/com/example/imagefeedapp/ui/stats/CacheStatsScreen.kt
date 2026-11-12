@@ -36,15 +36,14 @@ import com.example.imagefeedapp.ui.dashboard.ProgressView
 fun CacheStatsScreen(
     paddingValues: PaddingValues,
     cacheStats: CacheStats,
-    onClearCache: () -> Unit,
-    sequenceNumber: Int
+    onClearCache: () -> Unit
 ) {
 
     val usedMB = cacheStats.currentCacheSize / (1024f * 1024f)
     val maxMB = cacheStats.maxSize / (1024f * 1024f)
-
     val memoryUsagePercent = if (cacheStats.maxSize == 0) 0f
     else cacheStats.currentCacheSize.toFloat() / cacheStats.maxSize
+
     Box(
         modifier = Modifier
             .padding(paddingValues)
@@ -65,13 +64,13 @@ fun CacheStatsScreen(
 
                 GridView(
                     modifier = Modifier.weight(1f),
-                    Color(0xFF954646FF),
+                    Color(0xFFFF6E40),
                     "Hit Rate",
                     "%.0f%%".format(cacheStats.hitRate * 100)
                 )
                 GridView(
                     modifier = Modifier.weight(1f),
-                    Color(0xFF5B7837FF),
+                    Color(0xFFFFFF00),
                     "Cache size",
                     "%.1f MB".format(usedMB)
                 )
@@ -84,13 +83,13 @@ fun CacheStatsScreen(
             ) {
                 GridView(
                     modifier = Modifier.weight(1f),
-                    Color(0xFF5B7837FF),
+                    Color(0xFFE040FB),
                     "Hits",
                     cacheStats.hitCount.toString()
                 )
                 GridView(
                     modifier = Modifier.weight(1f),
-                    Color(0xFF5B7837FF),
+                    Color(0xFFFF4081),
                     "Misses",
                     cacheStats.missCount.toString()
                 )
@@ -113,16 +112,16 @@ fun CacheStatsScreen(
                 )
                 ProgressView(
                     Color.Blue,
-                    usedMB / 100, "Used",
-                    "%.1f MB".format(memoryUsagePercent)
-                    /*"%.1f / %.1f MB".format(usedMB, maxMB)*/
+                    memoryUsagePercent,
+                    "Used",
+                    "%.1f / %.1f MB".format(usedMB, maxMB)
                 )
 
                 ProgressView(
                     Color.Green,
-                    (cacheStats.hitRate / 100),
+                    cacheStats.hitRate,
                     "Hit rate",
-                    "%.0f%%".format(cacheStats.hitRate)
+                    "%.1f%%".format(cacheStats.hitRate)
                 )
 
                 Text(
@@ -146,7 +145,7 @@ fun CacheStatsScreen(
                     {
                         items(cacheStats.recentEvictions) { item ->
                             RecentEvictionsItem(
-                                "Photo#${sequenceNumber/*item.url.split("/").getOrNull(5) ?: item.url*/}",
+                                "Photo#${item.sequenceNumber}",
                                 "${item.sizeBytes / 1024}KB - ${(System.currentTimeMillis() - item.timestamp) / 1000}s ago"
                             )
                         }

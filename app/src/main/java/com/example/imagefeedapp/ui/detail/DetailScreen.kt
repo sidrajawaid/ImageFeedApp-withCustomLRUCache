@@ -1,5 +1,6 @@
 package com.example.imagefeedapp.ui.detail
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -28,7 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.imagefeedapp.R
+import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.ImageDetailModel
+import com.example.imagefeedapp.domain.model.ImageModel
 import com.example.imagefeedapp.ui.stats.CacheStatusBadge
 
 
@@ -92,8 +96,33 @@ fun DetailScreen(detailModel: ImageDetailModel) {
 @Composable
 fun PreviewDetailScreen() {
 
-    /*  val bitmapResult=  BitmapResult("bmp-icon-32x32.bmp,true)
-       val bitmapImage= ImageModel("13","photo/picsum/765*567",678,876,"url/1")
+
+      val bitmapResult=  BitmapResult(hardcodedBitmap(),true,"")
+          val bitmapImage= ImageModel("13", 1,13,14,"photo/picsum/765*567",
+              "photo/picsum/765*567")
    DetailScreen(ImageDetailModel(imageModel =bitmapImage,
-       bitmapResult = bitmapResult),{})*/
+       bitmapResult = bitmapResult))
+}
+
+fun hardcodedBitmap(scale: Int = 32): Bitmap {
+    val w = 8
+    val h = 8
+    val y = Color.Yellow.toArgb()
+    val k = Color.Black.toArgb()
+    val t = Color.Transparent.toArgb()
+
+    val pixels = intArrayOf(
+        t, t, y, y, y, y, t, t,
+        t, y, y, y, y, y, y, t,
+        y, y, k, y, y, k, y, y,
+        y, y, k, y, y, k, y, y,
+        y, y, y, y, y, y, y, y,
+        y, k, y, y, y, y, k, y,
+        t, y, k, k, k, k, y, t,
+        t, t, y, y, y, y, t, t,
+    )
+
+    val small = Bitmap.createBitmap(pixels, w, h, Bitmap.Config.ARGB_8888)
+    // Scale up without smoothing so the pixels stay crisp
+    return Bitmap.createScaledBitmap(small, w * scale, h * scale, false)
 }
