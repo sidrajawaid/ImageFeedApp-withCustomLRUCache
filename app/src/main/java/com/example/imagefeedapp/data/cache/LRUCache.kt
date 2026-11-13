@@ -61,6 +61,9 @@ class LRUCache(val cacheSize: Int) {
     @Synchronized
     fun clear() {
         map.clear()
+        hitUrls=0
+        missUrls=0
+        evictionHistory.clear()
         currentSize = 0
     }
 
