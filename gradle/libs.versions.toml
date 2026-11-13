@@ -23,6 +23,7 @@ mockitoCore = "5.23.0"
 mockitoKotlin = "6.3.0"
 navigationCompose = "2.10.0"
 okhttp = "5.5.0"
+material = "1.14.0"
 
 
 [libraries]
@@ -59,6 +60,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 
 

@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.material.progressindicator.LinearProgressIndicator
 
 
 @Composable
@@ -33,10 +35,12 @@ fun ProgressView(setColor:Color, setProgress:Float,
         }
 
         LinearProgressIndicator(
-            trackColor =  MaterialTheme.colorScheme.surfaceVariant,
-            progress = setProgress,
-            modifier = Modifier.fillMaxWidth(),
-            color = setColor)
+        progress = { setProgress },
+        modifier = Modifier.fillMaxWidth(),
+        color = setColor,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+        )
     }
 }
 

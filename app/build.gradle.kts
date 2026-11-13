@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.composer.shimmer)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.material)
     testImplementation(libs.junit)
     //  implementation(libs.androidx.compose)
     androidTestImplementation(platform(libs.androidx.compose.bom))

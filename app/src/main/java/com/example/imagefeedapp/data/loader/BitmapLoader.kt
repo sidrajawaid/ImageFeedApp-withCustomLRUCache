@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class BitmapLoader @Inject constructor( private val okHttpClient: OkHttpClient,
     private val lruImageCache: LRUCache) {
-    suspend fun loadBitmap(url: String, sequenceNumber: String): BitmapResult? {
+    suspend fun loadBitmap(url: String, sequenceNumber: Int): BitmapResult? {
 
         val cached = lruImageCache.getBitmap(url)
         if (cached != null) {
@@ -29,7 +29,7 @@ class BitmapLoader @Inject constructor( private val okHttpClient: OkHttpClient,
                 response.body.use { body ->
                     val bitmap = BitmapFactory.decodeStream(body.byteStream())
                     if (bitmap != null) {
-                        lruImageCache.addUrlEntry(url, bitmap)
+                        lruImageCache.addUrlEntry(url, bitmap,sequenceNumber)
                         val elapsedMillis = SystemClock.elapsedRealtime() - startTime;
 
                         BitmapResult(bitmap,false,"~${elapsedMillis}ms")

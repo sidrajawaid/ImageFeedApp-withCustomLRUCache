@@ -16,13 +16,14 @@ class LRUCache(val cacheSize: Int) {
     private val evictionHistory = ArrayDeque<EvictionRecord>(10)
 
     @Synchronized
-    fun addUrlEntry(url: String, bitmap: Bitmap, label: String = "") {
+    fun addUrlEntry(url: String, bitmap: Bitmap, sequenceNumber: Int) {
 
         if (bitmap.byteCount > cacheSize)
             return
 
         while (currentSize + bitmap.byteCount > cacheSize) {
-            deleteUrlEntry()
+            
+            deleteUrlEntry(sequenceNumber)
         }
         map[url] = bitmap
         currentSize += bitmap.byteCount
@@ -41,33 +42,20 @@ class LRUCache(val cacheSize: Int) {
     }
 
     @Synchronized
-    fun deleteUrlEntry() {
+    fun deleteUrlEntry(sequenceNumber:Int) {
 
         val firstEntry = map.entries.iterator().next()
-
-
         currentSize -= firstEntry.value.byteCount
         deletedUrls++
         evictionHistory.addLast(
             EvictionRecord(
                 url = firstEntry.key,
-                sequenceNumber = getIndexFromKey(firstEntry.key),
+                sequenceNumber = sequenceNumber,
                 sizeBytes = firstEntry.value.byteCount
             )
         )
         map.remove(firstEntry.key)
 
-    }
-
-    fun getIndexFromKey(key: String): Int {
-        var index = 0
-        for ((i, containKey) in map.keys.withIndex()) {
-            if (containKey == key) {
-                return i
-            }
-            index++
-        }
-        return -1 // Key not found
     }
 
     @Synchronized
