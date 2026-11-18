@@ -20,8 +20,9 @@ import com.example.imagefeedapp.ui.detail.CardItem
 
 
 @Composable
-fun FeedScreen(
-    images: List<ImageModel>, bitmapState: Map<String, BitmapResult?>,
+fun FeedScreen(clearCount:Int,
+    images: List<ImageModel>,
+    bitmapState: Map<String, BitmapResult?>,
     onImageVisible: (ImageModel) -> Unit,
     onImageClick: (ImageDetailModel) -> Unit
 ) {
@@ -41,7 +42,7 @@ fun FeedScreen(
         ) {
             items(images.size) { index ->
                 val item = images[index]
-                CardItem(
+                CardItem(clearCount=clearCount,
                     sequenceNumber = item.sequenceNumber,
                     imageModel = item,
                     bitmapImg = bitmapState[item.smallImageUrl],
@@ -99,7 +100,7 @@ fun FeedScreenPreview() {
         )
     }
 
-    FeedScreen(
+    FeedScreen(1,
         images = sampleImages,
         bitmapState = sampleBitmapState,
         onImageVisible = {},

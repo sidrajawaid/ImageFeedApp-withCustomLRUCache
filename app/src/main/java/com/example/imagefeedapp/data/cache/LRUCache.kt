@@ -1,17 +1,27 @@
 package com.example.imagefeedapp.data.cache
 
 import android.graphics.Bitmap
+import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.CacheStats
 import com.example.imagefeedapp.domain.model.EvictionRecord
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import okhttp3.Cache
 
 
 class LRUCache(val cacheSize: Int) {
 
-    private var map: LinkedHashMap<String, Bitmap> = LinkedHashMap(0, 0.75f, true)
+    private var map: LinkedHashMap<String, CacheEntry> = LinkedHashMap(0, 0.75f, true)
+
     private var currentSize = 0
     private var hitUrls = 0
     private var missUrls = 0;
     private var deletedUrls = 0
+
+    private val _cacheCleared = MutableStateFlow<Int>(0)
+    val cacheCleared: StateFlow<Int> = _cacheCleared.asStateFlow()
+
 
     private val evictionHistory = ArrayDeque<EvictionRecord>(10)
 
@@ -23,35 +33,35 @@ class LRUCache(val cacheSize: Int) {
 
         while (currentSize + bitmap.byteCount > cacheSize) {
             
-            deleteUrlEntry(sequenceNumber)
+            deleteUrlEntry()
         }
-        map[url] = bitmap
+        map[url] = CacheEntry (bitmap,sequenceNumber)
         currentSize += bitmap.byteCount
 
     }
 
     @Synchronized
-    fun getBitmap(url: String): Bitmap? {
-        val bitmap = map[url]
-        if (bitmap != null) {
+     fun getBitmap(url: String): Bitmap? {
+        val entry = map[url]
+        if (entry != null) {
             hitUrls++    // cache hit
         } else {
             missUrls++   // cache miss
         }
-        return bitmap
+        return entry?.bitmap
     }
 
     @Synchronized
-    fun deleteUrlEntry(sequenceNumber:Int) {
+    fun deleteUrlEntry() {
 
         val firstEntry = map.entries.iterator().next()
-        currentSize -= firstEntry.value.byteCount
+        currentSize -= firstEntry.value.bitmap.byteCount
         deletedUrls++
         evictionHistory.addLast(
             EvictionRecord(
                 url = firstEntry.key,
-                sequenceNumber = sequenceNumber,
-                sizeBytes = firstEntry.value.byteCount
+                sequenceNumber = firstEntry.value.sequenceNumber,
+                sizeBytes = firstEntry.value.bitmap.byteCount
             )
         )
         map.remove(firstEntry.key)
@@ -63,8 +73,10 @@ class LRUCache(val cacheSize: Int) {
         map.clear()
         hitUrls=0
         missUrls=0
+        deletedUrls=0
         evictionHistory.clear()
         currentSize = 0
+        _cacheCleared.value += 1
     }
 
 
@@ -80,8 +92,13 @@ class LRUCache(val cacheSize: Int) {
             missCount = missUrls,
             evictionCount = deletedUrls,
             hitRate = hitRate,
-            recentEvictions = evictionHistory
+            recentEvictions = evictionHistory.toList()
         )
 
     }
+
+    private class CacheEntry(
+        val bitmap: Bitmap,
+        val sequenceNumber: Int
+    )
 }

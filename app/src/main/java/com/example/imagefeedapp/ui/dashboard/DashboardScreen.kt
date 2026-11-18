@@ -28,6 +28,8 @@ fun DashboardScreen(
 
     val bitmapState by viewModel.bitmapState.collectAsStateWithLifecycle()
 
+    val clearCounter by viewModel.clearCounter.collectAsStateWithLifecycle()
+
     Box(
         modifier = Modifier
             .padding(innerPadding)
@@ -42,6 +44,7 @@ fun DashboardScreen(
                 is FeedUiState.Success -> {
                     val images = (uiState as FeedUiState.Success).imageModel
                     FeedScreen(
+                        clearCount=clearCounter,
                         images = images,
                         bitmapState = bitmapState,
                         onImageVisible = { model -> viewModel.loadBitmap(model.smallImageUrl,model.sequenceNumber) },

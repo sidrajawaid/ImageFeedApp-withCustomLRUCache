@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-09-27T04:03:43.690244700Z">
+        <DropdownSelection timestamp="2026-11-18T01:39:26.758596800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Sidra\.android\avd\Pixel_9a_2_2.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=R5CR60SPY4M" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="PreviewDetailScreen">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-11-13T02:54:28.448310600Z">
+        <DropdownSelection timestamp="2026-11-18T01:33:16.779820600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Sidra\.android\avd\Pixel_9a_2.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Sidra\.android\avd\Pixel_9a.avd" />
             </handle>
           </Target>
         </DropdownSelection>

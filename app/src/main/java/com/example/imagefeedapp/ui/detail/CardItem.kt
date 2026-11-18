@@ -1,9 +1,5 @@
 package com.example.imagefeedapp.ui.detail
 
-import android.R
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,8 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.imagefeedapp.domain.model.BitmapResult
 import com.example.imagefeedapp.domain.model.ImageModel
@@ -35,10 +29,11 @@ fun CardItem(
     imageModel: ImageModel,
     bitmapImg: BitmapResult?,
     onVisible: () -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    clearCount: Int
 ) {
 
-    LaunchedEffect(imageModel.smallImageUrl + imageModel.sequenceNumber) {
+    LaunchedEffect(imageModel.smallImageUrl,clearCount ) {
         onVisible()
     }
 

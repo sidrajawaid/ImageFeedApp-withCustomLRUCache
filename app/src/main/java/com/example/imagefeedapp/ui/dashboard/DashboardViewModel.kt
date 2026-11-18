@@ -1,7 +1,9 @@
 package com.example.imagefeedapp.ui.dashboard
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.imagefeedapp.data.cache.LRUCache
 import com.example.imagefeedapp.data.loader.BitmapLoader
 import com.example.imagefeedapp.data.network.NetworkMonitor
 import com.example.imagefeedapp.domain.model.BitmapResult
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val getImagesUseCase: GetImagesUseCase,
     private val networkMonitor: NetworkMonitor,
-    private val bitmapLoader: BitmapLoader
+    private val bitmapLoader: BitmapLoader,
+    private val lruCache: LRUCache
 ) : ViewModel() {
 
 
@@ -30,15 +33,23 @@ class DashboardViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
     val uiState: StateFlow<FeedUiState> = _uiState.asStateFlow()
 
+    var clearCounter= MutableStateFlow<Int>(0)
+
     init {
         viewModelScope.launch {
             networkMonitor.isConnected.collect { connected ->
                 _isConnected.value = connected
             }
         }
+        viewModelScope.launch {
+            lruCache.cacheCleared.collect {
+                _bitmapState.value= emptyMap()}
+
+        }
         loadImages()
 
     }
+
 
      fun loadImages() {
         viewModelScope.launch {
@@ -49,8 +60,8 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun loadBitmap(url: String , sequenceNumber: Int) {
-        val existing = _bitmapState.value[url]
-        if (existing?.isFromCache == true) return
+
+     //   if (_bitmapState.value[url] != null) return
         viewModelScope.launch {
             val bitmap = bitmapLoader.loadBitmap(url , sequenceNumber)
             _bitmapState.value += (url to bitmap)

@@ -41,15 +41,18 @@ class LRUCacheTest {
     fun testReturnsCorrectBitmap() {
         cache?.addUrlEntry(
             "url/1",
-            mockBitmap1
+            mockBitmap1,
+            1
         )
         cache?.addUrlEntry(
             "url/2",
-            mockBitmap2
+            mockBitmap2,
+            2
         )
         cache?.addUrlEntry(
             "url/3",
-            mockBitmap3
+            mockBitmap3,
+            3
         )
 
         assertEquals(1000, cache?.getBitmap("url/1")?.byteCount)
@@ -71,11 +74,13 @@ class LRUCacheTest {
 
         cache?.addUrlEntry(
             "url/6",
-            mockBitmap5
+            mockBitmap5,
+            6
         )
         cache?.addUrlEntry(
             "url/6",
-            mockBitmap6
+            mockBitmap6,
+            6
         )
         assertEquals(600, cache?.getBitmap("url/6")?.byteCount)
 
@@ -83,9 +88,9 @@ class LRUCacheTest {
 
     @Test
     fun testForEmptyCache() {
-        cache!!.addUrlEntry("url/1", mockBitmap1)
-        cache!!.addUrlEntry("url/2", mockBitmap2)
-        cache!!.addUrlEntry("url/3", mockBitmap3)
+        cache!!.addUrlEntry("url/1", mockBitmap1,1)
+        cache!!.addUrlEntry("url/2", mockBitmap2,2)
+        cache!!.addUrlEntry("url/3", mockBitmap3,3)
         // currentSize is now 3000, three entries in cache
 
         cache!!.clear()
@@ -99,20 +104,20 @@ class LRUCacheTest {
 
     @Test
     fun `currentSize increases by bitmap byteCount after put`() {
-        cache!!.addUrlEntry("url/1", bitmap = mockBitmap1)
+        cache!!.addUrlEntry("url/1", bitmap = mockBitmap1,1)
         val stats = cache!!.getCacheStats()
         assertEquals(1000, stats.currentCacheSize)
     }
 
     @Test
     fun `currentSize decreases by bitmap byteCount after eviction`() {
-        cache!!.addUrlEntry("url/1", bitmap = mockBitmap1)
-        cache!!.addUrlEntry("url/2", bitmap = mockBitmap2)
-        cache!!.addUrlEntry("url/3", bitmap = mockBitmap3)
+        cache!!.addUrlEntry("url/1", bitmap = mockBitmap1,1)
+        cache!!.addUrlEntry("url/2", bitmap = mockBitmap2,2)
+        cache!!.addUrlEntry("url/3", bitmap = mockBitmap3,3)
         //cache size = 3000
         mockBitmap4 = mock(Bitmap::class.java)
         whenever(mockBitmap4.byteCount).thenReturn(100)
-        cache!!.addUrlEntry("url/4", mockBitmap4)
+        cache!!.addUrlEntry("url/4", mockBitmap4,4)
         val stats = cache!!.getCacheStats()
         assertEquals(2100, stats.currentCacheSize)
     }
@@ -129,7 +134,7 @@ class LRUCacheTest {
     fun testShowsBitmapLargerThanMaxSizeIsNotInserted() {
         val mockBitmap4 = mock(Bitmap::class.java)
         whenever(mockBitmap4.byteCount).thenReturn(5000)
-        cache!!.addUrlEntry("url/1", mockBitmap4)
+        cache!!.addUrlEntry("url/1", mockBitmap4,1)
         assertNull(cache!!.getBitmap("url/1"))
     }
 
@@ -137,16 +142,16 @@ class LRUCacheTest {
     fun testShowsBitmapExactlyEqualToMaxSizeIsInsertedSuccessfully() {
         val mockBitmap4 = mock(Bitmap::class.java)
         whenever(mockBitmap4.byteCount).thenReturn(3000)
-        cache!!.addUrlEntry("url/4", mockBitmap4)
+        cache!!.addUrlEntry("url/4", mockBitmap4,4)
         assertEquals(3000, cache!!.getBitmap("url/4")!!.byteCount)
     }
 
     @Test
     fun testShowsCurrentSizeNeverExceedsMaxSizeAfterMultipleAdditions() {
 // fill cache completely
-        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000
-        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
-        cache!!.addUrlEntry("url/3", mockBitmap3)  // 1500
+        cache!!.addUrlEntry("url/1", mockBitmap1,1)  // 1000
+        cache!!.addUrlEntry("url/2", mockBitmap2,2)  // 500
+        cache!!.addUrlEntry("url/3", mockBitmap3,3)  // 1500
         // currentSize = 3000 = maxSize
 
         // keep inserting — evictions should keep currentSize within bounds
@@ -157,9 +162,9 @@ class LRUCacheTest {
         whenever(extraBitmap2.byteCount).thenReturn(1200)
         whenever(extraBitmap3.byteCount).thenReturn(600)
 
-        cache!!.addUrlEntry("url/4", extraBitmap1)
-        cache!!.addUrlEntry("url/5", extraBitmap2)
-        cache!!.addUrlEntry("url/6", extraBitmap3)
+        cache!!.addUrlEntry("url/4", extraBitmap1,1)
+        cache!!.addUrlEntry("url/5", extraBitmap2,2)
+        cache!!.addUrlEntry("url/6", extraBitmap3,3)
 
         val stats = cache!!.getCacheStats()
         assertTrue(stats.currentCacheSize <= stats.maxSize)
@@ -167,9 +172,9 @@ class LRUCacheTest {
 
     @Test
     fun testPerformsRecentlyAccessedEntrySurvivesEvictionOverUnaccessedEntry() {
-        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000 - inserted first
-        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
-        cache!!.addUrlEntry("url/3", mockBitmap3)  // 1500
+        cache!!.addUrlEntry("url/1", mockBitmap1,1)  // 1000 - inserted first
+        cache!!.addUrlEntry("url/2", mockBitmap2,2)  // 500
+        cache!!.addUrlEntry("url/3", mockBitmap3,3)  // 1500
         // cache full at 3000
 
         cache!!.getBitmap("url/1")  // access url/1 — promotes it to MRU
@@ -178,7 +183,7 @@ class LRUCacheTest {
         // url/2 should be evicted (LRU), not url/1 (recently accessed)
         val newBitmap = mock(Bitmap::class.java)
         whenever(newBitmap.byteCount).thenReturn(500)
-        cache!!.addUrlEntry("url/4", newBitmap)
+        cache!!.addUrlEntry("url/4", newBitmap,4)
 
         assertNull(cache!!.getBitmap("url/2"))       // evicted — was LRU
         assertNotNull(cache!!.getBitmap("url/1"))     // survived — was accessed
@@ -192,7 +197,7 @@ class LRUCacheTest {
         val smallBitmap = mock(Bitmap::class.java)
         whenever(smallBitmap.byteCount).thenReturn(100)
 
-        cache!!.addUrlEntry("url/small", smallBitmap)
+        cache!!.addUrlEntry("url/small", smallBitmap,1)
         cache!!.getBitmap("url/small")   // hit
         cache!!.getBitmap("url/small")   // hit
         cache!!.getBitmap("url/missing") // miss
@@ -207,20 +212,20 @@ class LRUCacheTest {
 
     @Test
     fun testEvictionCountIncrementsOnEviction() {
-        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000
-        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
-        cache!!.addUrlEntry("url/3", mockBitmap3)  // 1500 — cache full
+        cache!!.addUrlEntry("url/1", mockBitmap1,1)  // 1000
+        cache!!.addUrlEntry("url/2", mockBitmap2,2)  // 500
+        cache!!.addUrlEntry("url/3", mockBitmap3,3)  // 1500 — cache full
 
         val newBitmap = mock(Bitmap::class.java)
         whenever(newBitmap.byteCount).thenReturn(500)
-        cache!!.addUrlEntry("url/4", newBitmap)  // triggers eviction
+        cache!!.addUrlEntry("url/4", newBitmap,4)  // triggers eviction
 
         assertEquals(1, cache!!.getCacheStats().evictionCount)
     }
 
     @Test
     fun testHitAndMissCountsIncrementCorrectly() {
-        cache!!.addUrlEntry("url/1", mockBitmap1)
+        cache!!.addUrlEntry("url/1", mockBitmap1,1)
         cache!!.getBitmap("url/1")    // hit
         cache!!.getBitmap("url/1")    // hit
         cache!!.getBitmap("url/99")   // miss
@@ -232,18 +237,18 @@ class LRUCacheTest {
 
     @Test
     fun testCacheUsableAfterClear() {
-        cache!!.addUrlEntry("url/1", mockBitmap1)
+        cache!!.addUrlEntry("url/1", mockBitmap1,1)
         cache!!.clear()
 
-        cache!!.addUrlEntry("url/2", mockBitmap2)
+        cache!!.addUrlEntry("url/2", mockBitmap2,2)
         assertNotNull(cache!!.getBitmap("url/2"))
         assertEquals(500, cache!!.getCacheStats().currentCacheSize)
     }
 
     @Test
     fun testEvictionCountStaysZeroWhenCacheNotFull() {
-        cache!!.addUrlEntry("url/1", mockBitmap1)  // 1000
-        cache!!.addUrlEntry("url/2", mockBitmap2)  // 500
+        cache!!.addUrlEntry("url/1", mockBitmap1,1)  // 1000
+        cache!!.addUrlEntry("url/2", mockBitmap2,2)  // 500
         // currentSize = 1500, maxSize = 3000 — no eviction
 
         assertEquals(0, cache!!.getCacheStats().evictionCount)
