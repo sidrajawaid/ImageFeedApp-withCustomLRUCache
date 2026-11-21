@@ -12,6 +12,7 @@ import okhttp3.Cache
 
 class LRUCache(val cacheSize: Int) {
 
+    private val MAX_EVICTION_HISTORY=10
     private var map: LinkedHashMap<String, CacheEntry> = LinkedHashMap(0, 0.75f, true)
 
     private var currentSize = 0
@@ -30,18 +31,22 @@ class LRUCache(val cacheSize: Int) {
 
         if (bitmap.byteCount > cacheSize)
             return
+        val existing = map[url]
+        if (existing != null) {
+            currentSize -= existing.bitmap.byteCount   // or existing.byteCount before the holder class
+        }
 
         while (currentSize + bitmap.byteCount > cacheSize) {
-            
+
             deleteUrlEntry()
         }
-        map[url] = CacheEntry (bitmap,sequenceNumber)
+        map[url] = CacheEntry(bitmap, sequenceNumber)
         currentSize += bitmap.byteCount
 
     }
 
     @Synchronized
-     fun getBitmap(url: String): Bitmap? {
+    fun getBitmap(url: String): Bitmap? {
         val entry = map[url]
         if (entry != null) {
             hitUrls++    // cache hit
@@ -52,11 +57,13 @@ class LRUCache(val cacheSize: Int) {
     }
 
     @Synchronized
-    fun deleteUrlEntry() {
+    private fun deleteUrlEntry() {
 
         val firstEntry = map.entries.iterator().next()
         currentSize -= firstEntry.value.bitmap.byteCount
         deletedUrls++
+        if (evictionHistory.size >= MAX_EVICTION_HISTORY)
+            evictionHistory.removeFirst()
         evictionHistory.addLast(
             EvictionRecord(
                 url = firstEntry.key,
@@ -71,9 +78,9 @@ class LRUCache(val cacheSize: Int) {
     @Synchronized
     fun clear() {
         map.clear()
-        hitUrls=0
-        missUrls=0
-        deletedUrls=0
+        hitUrls = 0
+        missUrls = 0
+        deletedUrls = 0
         evictionHistory.clear()
         currentSize = 0
         _cacheCleared.value += 1
